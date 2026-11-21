@@ -120,7 +120,7 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <div class="field"><label class="title">City / Location</label><input name="Location" type="text" placeholder="Location"></div>
 <div class="field"><label class="title">Contact Person</label><input name="Contact Person" type="text" placeholder="Full name"></div>
 <div class="field"><label class="title">Position</label><input name="Position" type="text" placeholder="e.g. Medical Director"></div>
-<div class="field"><label class="title">Your Email Address *</label><input name="Email" required type="email" placeholder="your.email@example.com"></div>
+<div class="field"><label class="title">Email Address</label><input name="Email" type="email" placeholder="tewodroswondu123@gmail.com"></div>
 <div class="field"><label class="title">Phone Number</label><input name="Phone" type="tel" placeholder="+251"></div>
 <div class="field"><label class="title">Existing Website (if any)</label><input name="Existing Website" type="text" placeholder="Website address"></div>
 </div>
@@ -313,14 +313,14 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <section class="section" id="result">
 <div class="result">
 <i class="fa-solid fa-circle-check"></i>
-<h2 style="color:var(--navy);margin-top:15px">Thank You!</h2>
-<p style="color:var(--muted)" id="recipientNote">Your PDF requirements report has been generated.</p>
+<h2 style="color:var(--navy);margin-top:15px">Thank you for filling!</h2>
+<p style="color:var(--muted)" id="recipientNote">Your PDF requirements report has been prepared for tewodroswondu123@gmail.com.</p>
 </div>
 <div class="summary" id="summary"></div>
 <div class="buttons" style="justify-content:center;flex-wrap:wrap">
-<button class="btn primary" onclick="downloadPdf()">Download PDF Report</button>
-<button class="btn secondary" onclick="copy()">Copy Summary</button>
-<button class="btn success" onclick="retryPdfSend()">Resend PDF Report</button>
+<button type="button" class="btn primary" onclick="downloadPdf()">Download PDF Report</button>
+<button type="button" class="btn secondary" onclick="copy()">Copy Summary</button>
+<button type="button" class="btn success" onclick="retryPdfSend()">Send Email Again</button>
 </div>
 <p id="message" style="text-align:center;font-size:12px;color:var(--green);margin-top:12px"></p>
 </section>
@@ -332,11 +332,8 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 </footer>
 
 <script>
-// Optional fallback email if Section 1's Email field is empty
-const MY_EMAIL = '';
-
-// Point this to your backend/webhook/relay endpoint that accepts FormData (including `pdf` file)
-// and emails it to `to_email`. Leave empty ('') to download PDF locally and open a mail fallback.
+const TARGET_EMAIL = 'tewodroswondu123@gmail.com';
+// Optional server/webhook endpoint (FormData with `pdf` file) if you want silent background sending
 const PDF_MAIL_ENDPOINT = '';
 
 const sections=[...document.querySelectorAll('#form .section')];
@@ -418,7 +415,7 @@ doc.text('Hospital Website & Digital Services Assessment',margin,38);
 doc.setFont('helvetica','normal');
 doc.setFontSize(10);
 doc.setTextColor(192,217,233);
-doc.text(`Generated: ${new Date().toLocaleString()}`,margin,60);
+doc.text(`Thank you for filling! Generated: ${new Date().toLocaleString()}`,margin,60);
 
 y=112;
 doc.setTextColor(36,59,80);
@@ -474,21 +471,17 @@ document.getElementById('message').textContent=`Downloaded ${lastPdfName}.`;
 }
 
 async function sendPdfReport(pdfBlob,data){
-const toEmail=(data['Email']||MY_EMAIL||'').trim();
+const toEmail=TARGET_EMAIL;
 const hospital=data['Hospital Name']||'New Assessment';
 const name=data['Contact Person']||'there';
 const msgEl=document.getElementById('message');
-
-if(!toEmail){
-msgEl.textContent='PDF generated. Enter your email in Section 1 to send automatically.';
-return;
-}
 
 if(PDF_MAIL_ENDPOINT){
 try{
 msgEl.textContent=`Sending PDF report (${lastPdfName}) to ${toEmail}...`;
 const formData=new FormData();
 formData.append('to_email',toEmail);
+formData.append('sender_email',(data['Email']||'').trim());
 formData.append('hospital_name',hospital);
 formData.append('contact_name',name);
 formData.append('summary_text',summaryText);
@@ -496,17 +489,17 @@ formData.append('pdf',pdfBlob,lastPdfName);
 
 const res=await fetch(PDF_MAIL_ENDPOINT,{method:'POST',body:formData});
 if(!res.ok)throw new Error(`HTTP ${res.status}`);
-msgEl.textContent=`PDF report sent to ${toEmail}.`;
+msgEl.textContent=`Thank you for filling! PDF report sent to ${toEmail}.`;
 return;
 }catch(err){
-msgEl.textContent=`Could not auto-send (${err.message}). PDF downloaded—attach ${lastPdfName} in your email client.`;
+msgEl.textContent=`Could not auto-send (${err.message}). PDF downloaded—attach ${lastPdfName} in your email client to ${toEmail}.`;
 }
 }else{
-msgEl.textContent=`PDF (${lastPdfName}) saved locally. Because browsers cannot attach files via mailto, attach ${lastPdfName} to the opened email for ${toEmail}.`;
+msgEl.textContent=`Thank you for filling! PDF (${lastPdfName}) downloaded. Attach it in your email app to ${toEmail}.`;
 }
 
 const subject=encodeURIComponent('Hospital Digital Requirements PDF Report - '+hospital);
-const body=encodeURIComponent(`Hello ${name},\n\nThank you for completing the Hospital Website & Digital Services Assessment for ${hospital}. Please find the generated PDF report (${lastPdfName}) attached or review the summary below:\n\n${summaryText}\nThank you again,\nHealthcare Digital Solutions`);
+const body=encodeURIComponent(`Hello ${name},\n\nThank you for filling out the Hospital Website & Digital Services Assessment for ${hospital}. Please find the downloaded PDF report (${lastPdfName}) to attach or review the summary below:\n\n${summaryText}\nThank you for filling!\nHealthcare Digital Solutions`);
 window.location.href=`mailto:${encodeURIComponent(toEmail)}?subject=${subject}&body=${body}`;
 }
 
@@ -516,12 +509,13 @@ sendPdfReport(lastPdfBlob,lastData);
 }
 
 function finish(){
-const emailInput=document.querySelector('input[name="Email"]');
-if(emailInput && !emailInput.checkValidity()){
-step=0;
-render();
-emailInput.reportValidity();
+for(const el of document.querySelectorAll('#form [required]')){
+if(!el.checkValidity()){
+const secIndex=sections.findIndex(s=>s.contains(el));
+if(secIndex>=0){step=secIndex;render();}
+el.reportValidity();
 return;
+}
 }
 const d=collect();
 lastData=d;
@@ -539,10 +533,7 @@ lastPdfBlob=buildPdfBlob(d);
 triggerBlobDownload(lastPdfBlob,lastPdfName);
 
 document.getElementById('summary').innerHTML=html||'No answers recorded.';
-const targetEmail=(d['Email']||MY_EMAIL||'').trim();
-document.getElementById('recipientNote').textContent=targetEmail
-  ? `Your PDF report (${lastPdfName}) is ready and being sent to ${targetEmail}.`
-  : `Your PDF report (${lastPdfName}) has been generated and downloaded.`;
+document.getElementById('recipientNote').textContent=`Your PDF requirements report (${lastPdfName}) is ready and addressed to ${TARGET_EMAIL}.`;
 document.getElementById('form').classList.add('hidden');
 document.getElementById('result').classList.add('active');
 document.querySelector('.progress').classList.add('hidden');
