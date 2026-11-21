@@ -1,0 +1,925 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071d35">
+<title>Hospital Digital Transformation | Requirements Assessment</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+:root {
+  --navy:#071d35;
+  --blue:#087fca;
+  --cyan:#17b8c8;
+  --light:#f3f8fc;
+  --text:#19324a;
+  --muted:#708398;
+  --border:#e0e9f1;
+  --white:#fff;
+  --green:#149b78;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'DM Sans',sans-serif;
+  color:var(--text);
+  background:var(--light);
+  line-height:1.6;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.hero{
+  min-height:440px;
+  padding:30px 7%;
+  color:white;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(115deg,#06192e 5%,#073e68 62%,#087fca);
+}
+.hero:before,.hero:after{
+  content:"";
+  position:absolute;
+  border:1px solid #ffffff20;
+  border-radius:50%;
+  width:400px;height:400px;
+  right:-100px;top:-140px;
+}
+.hero:after{width:260px;height:260px;right:80px;top:180px}
+.nav{
+  max-width:1250px;margin:auto;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:2;
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px}
+.brand-icon{
+  width:46px;height:46px;border-radius:14px;
+  background:#ffffff20;display:grid;place-items:center;
+  font-size:23px;color:#55e0ed;
+}
+.nav-label{font-size:12px;letter-spacing:2px;color:#b9d9ed}
+.hero-content{
+  max-width:1250px;margin:90px auto 55px;
+  position:relative;z-index:2;
+}
+.eyebrow{
+  display:inline-flex;gap:9px;align-items:center;
+  color:#75e3ec;background:#ffffff13;
+  border:1px solid #ffffff30;border-radius:30px;
+  padding:8px 15px;font-size:12px;font-weight:700;
+  letter-spacing:1.4px;text-transform:uppercase;
+}
+.hero h1{
+  font-family:Manrope,sans-serif;
+  font-size:clamp(34px,5vw,60px);
+  line-height:1.13;max-width:760px;
+  margin:23px 0 17px;letter-spacing:-2px;
+}
+.hero h1 span{color:#50dce8}
+.hero p{color:#c6dbea;max-width:620px;font-size:16px}
+.hero-bottom{
+  display:flex;gap:25px;flex-wrap:wrap;margin-top:30px;
+  color:#d2e7f5;font-size:13px;
+}
+.hero-bottom i{color:#52dce5;margin-right:7px}
+.container{max-width:1100px;margin:-30px auto 70px;padding:0 20px;position:relative;z-index:3}
+.intro{
+  background:white;border-radius:17px;padding:27px 30px;
+  box-shadow:0 12px 35px #0c36500d;margin-bottom:25px;
+  border:1px solid var(--border);
+}
+.intro h2{font-size:21px;margin-bottom:7px;color:var(--navy)}
+.intro p{font-size:14px;color:var(--muted)}
+.progress-card{
+  padding:20px 25px;background:white;border-radius:15px;
+  border:1px solid var(--border);margin-bottom:24px;
+}
+.progress-top{display:flex;justify-content:space-between;gap:15px;margin-bottom:12px;font-size:13px;font-weight:700}
+.progress-track{height:7px;background:#e9f0f6;border-radius:20px;overflow:hidden}
+.progress-fill{height:100%;width:14.28%;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:.3s}
+.steps{display:flex;justify-content:space-between;gap:6px;margin-top:13px}
+.step-dot{font-size:10px;color:#91a0ae;text-align:center;flex:1}
+.step-dot.active{color:var(--blue);font-weight:800}
+.form-section{
+  display:none;background:white;border:1px solid var(--border);
+  border-radius:18px;padding:35px;margin-bottom:20px;
+  box-shadow:0 5px 22px #102e4908;
+  animation:appear .35s ease;
+}
+.form-section.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section-head{display:flex;gap:17px;align-items:flex-start;margin-bottom:30px}
+.section-icon{
+  min-width:52px;height:52px;border-radius:15px;
+  display:grid;place-items:center;background:#e8f6fc;
+  color:var(--blue);font-size:22px;
+}
+.section-head h2{font-family:Manrope,sans-serif;font-size:23px;color:var(--navy);line-height:1.3}
+.section-head p{font-size:13px;color:var(--muted);margin-top:5px}
+.field{margin-bottom:23px}
+.field label,.field-label{display:block;font-size:13px;font-weight:700;margin-bottom:9px}
+.required{color:#e35e5e}
+input[type=text],input[type=email],input[type=tel],input[type=url],textarea,select{
+  width:100%;padding:13px 15px;border:1px solid var(--border);
+  border-radius:9px;background:#fbfdff;outline:none;color:var(--text);
+  font-size:14px;transition:.2s;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #087fca13}
+textarea{min-height:110px;resize:vertical}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.choice{
+  display:flex;gap:11px;align-items:flex-start;
+  padding:14px;border:1px solid var(--border);
+  border-radius:11px;cursor:pointer;transition:.2s;
+  background:white;min-height:65px;
+}
+.choice:hover{border-color:#8ccbe6;background:#f7fcff}
+.choice:has(input:checked){border-color:var(--blue);background:#eff8fe}
+.choice input{accent-color:var(--blue);margin-top:5px;flex-shrink:0}
+.choice strong{font-size:13px;display:block}
+.choice small{font-size:11px;color:var(--muted);display:block;margin-top:2px}
+.radio-grid{display:flex;gap:12px;flex-wrap:wrap}
+.radio-choice{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 16px;border:1px solid var(--border);
+  border-radius:9px;font-size:13px;cursor:pointer;
+}
+.radio-choice:has(input:checked){background:#eff8fe;border-color:var(--blue)}
+.radio-choice input{accent-color:var(--blue)}
+.subheading{
+  font-size:14px;color:var(--navy);font-weight:800;
+  margin:27px 0 13px;padding-bottom:9px;
+  border-bottom:1px solid var(--border);
+}
+.conditional{
+  display:none;padding:20px;margin-top:15px;
+  background:#f5faff;border:1px dashed #a8cce3;border-radius:12px;
+}
+.conditional.show{display:block}
+.note{
+  padding:14px 16px;border-radius:10px;
+  background:#edf8fc;color:#38627b;font-size:12px;margin:18px 0;
+}
+.navigation{
+  display:flex;justify-content:space-between;gap:12px;
+  padding:20px 0 5px;
+}
+.btn{
+  border:0;border-radius:9px;padding:13px 23px;
+  font-size:13px;font-weight:800;display:inline-flex;
+  align-items:center;gap:10px;transition:.2s;
+}
+.btn-primary{background:var(--blue);color:white}
+.btn-primary:hover{background:#0566a6;transform:translateY(-1px)}
+.btn-secondary{background:#e9f0f6;color:#36516a}
+.btn-success{background:var(--green);color:white}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.summary-box{background:#f5faff;border:1px solid #d8e8f3;border-radius:13px;padding:22px;margin:20px 0}
+.summary-box h3{font-size:15px;margin-bottom:12px}
+.summary-box p{font-size:13px;margin:6px 0;color:#536a7f}
+.footer{
+  background:var(--navy);color:white;padding:35px 7%;
+  text-align:center;
+}
+.footer strong{font-size:18px}
+.footer p{color:#a8c1d3;font-size:12px;margin-top:8px}
+.footer .foot-icon{color:#50dce8;margin-right:8px}
+.hidden{display:none!important}
+@media(max-width:650px){
+ .hero{min-height:400px;padding:22px 6%}
+ .hero-content{margin:70px auto 50px}
+ .hero h1{letter-spacing:-1px}
+ .container{padding:0 12px}
+ .form-section{padding:23px 17px}
+ .grid-2,.grid-3,.choice-grid{grid-template-columns:1fr}
+ .nav-label{display:none}
+ .section-head h2{font-size:19px}
+ .steps{display:none}
+ .navigation .btn{padding:12px 15px;font-size:12px}
+}
+@media print{
+ body{background:white}
+ .hero{min-height:auto;padding:20px;color:white}
+ .hero-content{margin:25px auto}
+ .container{margin:10px auto}
+ .progress-card,.navigation,.footer,.intro{display:none!important}
+ .form-section{display:block!important;box-shadow:none;break-inside:avoid;border:1px solid #ddd}
+ .conditional{display:block!important}
+}
+</style>
+</head>
+
+<body>
+
+<header class="hero">
+  <nav class="nav">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+      <span>HEALTHCARE <span style="color:#55dce8">DIGITAL</span></span>
+    </div>
+    <div class="nav-label">DIGITAL TRANSFORMATION ASSESSMENT</div>
+  </nav>
+
+  <div class="hero-content">
+    <div class="eyebrow"><i class="fa-solid fa-stethoscope"></i> Hospital Technology & Innovation</div>
+    <h1>Let's Build the <span>Future of Healthcare</span> Together.</h1>
+    <p>
+      A comprehensive requirements assessment to understand your hospital's
+      website, digital services, patient experience and technology needs.
+      Your vision will help us design the right solution.
+    </p>
+    <div class="hero-bottom">
+      <span><i class="fa-regular fa-clock"></i> 5–10 minutes</span>
+      <span><i class="fa-solid fa-list-check"></i> 7 assessment sections</span>
+      <span><i class="fa-solid fa-shield-halved"></i> Requirements focused</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="intro">
+    <h2>Hospital Digital Requirements Questionnaire</h2>
+    <p>
+      Dear Hospital Management, please complete this assessment to help us
+      understand your expectations. Select all applicable requirements.
+      This will guide our website design, system development, implementation
+      and project proposal.
+    </p>
+  </div>
+
+  <div class="progress-card">
+    <div class="progress-top">
+      <span id="progressLabel">Section 1 of 7</span>
+      <span id="progressPercent">14%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="steps">
+      <span class="step-dot active">Hospital</span>
+      <span class="step-dot">Website</span>
+      <span class="step-dot">Systems</span>
+      <span class="step-dot">Users</span>
+      <span class="step-dot">Integration</span>
+      <span class="step-dot">Design</span>
+      <span class="step-dot">Final</span>
+    </div>
+  </div>
+
+  <form id="hospitalForm">
+
+  <!-- SECTION 1 -->
+  <section class="form-section active">
+    <div class="section-head">
+      <div class="section-icon"><i class="fa-solid fa-hospital"></i></div>
+      <div>
+        <h2>Hospital Information</h2>
+        <p>Tell us about your healthcare institution.</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Hospital / Institution Name <span class="required">*</span></label>
+        <input type="text" name="Hospital Name" required placeholder="Enter hospital name">
+      </div>
+      <div class="field">
+        <label>Hospital Type <span class="required">*</span></label>
+        <select name="Hospital Type" required>
+          <option value="">Select type</option>
+          <option>General Hospital</option>
+          <option>Specialized Hospital</option>
+          <option>Teaching Hospital</option>
+          <option>Private Hospital</option>
+          <option>Public Hospital</option>
+          <option>Clinic / Medical Center</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Location</label>
+        <input type="text" name="Location" placeholder="City, country">
+      </div>
+      <div class="field">
+        <label>Official Website (if available)</label>
+        <input type="url" name="Existing Website" placeholder="https://example.com">
+      </div>
+      <div class="field">
+        <label>Contact Person <span class="required">*</span></label>
+        <input type="text" name="Contact Person" required placeholder="Full name">
+      </div>
+      <div class="field">
+        <label>Position / Department</label>
+        <input type="text" name="Position" placeholder="e.g. Hospital Administrator">
+      </div>
+      <div class="field">
+        <label>Email Address <span class="required">*</span></label>
+        <input type="email" name="Email" required placeholder="name@hospital.com">
+      </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <input type="tel" name="Phone" placeholder="+251 ...">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Briefly describe your hospital and its main services.</label>
+      <textarea name="Hospital Description" placeholder="Tell us about your hospital, specialties, patient capacity and services..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>What is the primary objective of this project?</label>
+      <div class="choice-grid">
+        <label class="choice"><input type="checkbox" name="Objectives" value="Professional online presence"><span><strong>Professional online presence</strong><small>Build a modern hospital identity</small></span></label>
+        <label class="choice"><input type="checkbox" name="Objectives" value="Improve patient experience"><span><strong>Improve patient experience</strong><small>Make services easier to access</small></span></label>
+        <label class="choice"><input type="checkbox" name="Objectives" value="Digitize hospital operations"><span><strong>Digitize hospital operations</strong><small>Reduce manual processes</small></span></label>
+        <label class="choice"><input type="checkbox" name="Objectives" value="Increase visibility"><span><strong>Increase visibility</strong><small>Reach more patients</small></span></label>
+        <label class="choice"><input type="checkbox" name="Objectives" value="Integrated digital healthcare"><span><strong>Integrated digital healthcare</strong><small>Connect website and systems</small></span></label>
+        <label class="choice"><input type="checkbox" name="Objectives" value="Other objective"><span><strong>Other</strong><small>Additional business objectives</small></span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="form-section">
+    <div class="section-head">
+      <div class="section-icon"><i class="fa-solid fa-globe"></i></div>
+      <div>
+        <h2>Website Requirements</h2>
+        <p>Which pages and features should the hospital website include?</p>
+      </div>
+    </div>
+
+    <div class="note"><i class="fa-solid fa-circle-info"></i> Select all pages and features you want included in the website.</div>
+
+    <div class="subheading">A. Main Website Pages</div>
+    <div class="choice-grid">
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Home Page"><span><strong>Home Page</strong><small>Modern landing page and highlights</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="About Us"><span><strong>About Us</strong><small>History, vision, mission and values</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Medical Departments"><span><strong>Medical Departments</strong><small>Cardiology, surgery, pediatrics etc.</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Medical Services"><span><strong>Medical Services</strong><small>Services and treatments</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Doctors and Specialists"><span><strong>Doctors & Specialists</strong><small>Profiles and qualifications</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Facilities and Equipment"><span><strong>Facilities & Equipment</strong><small>Hospital infrastructure</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Gallery"><span><strong>Photo & Video Gallery</strong><small>Hospital environment and activities</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="News and Events"><span><strong>News & Events</strong><small>Announcements and updates</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Careers"><span><strong>Careers</strong><small>Job vacancies and applications</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Contact Us"><span><strong>Contact Us</strong><small>Contact details and location map</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Patient Information"><span><strong>Patient Information</strong><small>Guides and patient resources</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Pages" value="Frequently Asked Questions"><span><strong>FAQs</strong><small>Common patient questions</small></span></label>
+    </div>
+
+    <div class="subheading">B. Additional Website Features</div>
+    <div class="choice-grid">
+      <label class="choice"><input type="checkbox" name="Website Features" value="Online appointment button"><span><strong>Appointment button</strong><small>Quick booking access</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Features" value="Live chat"><span><strong>Live Chat</strong><small>Real-time communication</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Features" value="WhatsApp integration"><span><strong>WhatsApp Integration</strong><small>Direct patient communication</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Features" value="Emergency contact"><span><strong>Emergency Contact</strong><small>Prominent emergency information</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Features" value="Search function"><span><strong>Website Search</strong><small>Find doctors and services</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Features" value="Accessibility features"><span><strong>Accessibility Features</strong><small>Support different user needs</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Features" value="SEO"><span><strong>Search Engine Optimization</strong><small>Google visibility</small></span></label>
+      <label class="choice"><input type="checkbox" name="Website Features" value="Social media integration"><span><strong>Social Media Integration</strong><small>Facebook, Instagram, Telegram etc.</small></span></label>
+    </div>
+
+    <div class="subheading">C. Website Languages</div>
+    <div class="choice-grid">
+      <label class="choice"><input type="checkbox" name="Languages" value="English"><span><strong>English</strong></span></label>
+      <label class="choice"><input type="checkbox" name="Languages" value="Amharic"><span><strong>Amharic</strong></span></label>
+      <label class="choice"><input type="checkbox" name="Languages" value="Afaan Oromo"><span><strong>Afaan Oromo</strong></span></label>
+      <label class="choice"><input type="checkbox" name="Languages" value="Other languages"><span><strong>Other languages</strong></span></label>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="form-section">
+    <div class="section-head">
+      <div class="section-icon"><i class="fa-solid fa-laptop-medical"></i></div>
+      <div>
+        <h2>Hospital Management Systems</h2>
+        <p>Does your hospital need digital systems beyond the website?</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <i class="fa-solid fa-lightbulb"></i>
+      This is an important section. A hospital can have a public website,
+      an internal management system, or a complete integrated digital platform.
+    </div>
+
+    <div class="field">
+      <label>Does your hospital require additional software systems?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Need Systems" value="Yes" class="system-radio"> Yes</label>
+        <label class="radio-choice"><input type="radio" name="Need Systems" value="No" class="system-radio"> No, website only</label>
+        <label class="radio-choice"><input type="radio" name="Need Systems" value="Not sure" class="system-radio"> Not sure, need consultation</label>
+      </div>
+    </div>
+
+    <div id="systemOptions" class="conditional">
+      <div class="subheading" style="margin-top:0">A. Patient & Clinical Systems</div>
+      <div class="choice-grid">
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Online Appointment Booking"><span><strong>Online Appointment Booking</strong><small>Patients select doctors, dates and times</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Patient Registration"><span><strong>Patient Registration</strong><small>Digital patient enrollment</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Hospital Management System"><span><strong>Hospital Management System (HMS)</strong><small>Integrated hospital operations</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Electronic Medical Records"><span><strong>Electronic Medical Records (EMR)</strong><small>Digital patient clinical records</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Patient Portal"><span><strong>Patient Portal</strong><small>Patient login and personal records</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Doctor Portal"><span><strong>Doctor Portal</strong><small>Doctor access to assigned patients</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Laboratory Management System"><span><strong>Laboratory Management (LIS)</strong><small>Lab requests and result management</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Radiology Information System"><span><strong>Radiology System (RIS)</strong><small>Imaging workflows and reports</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Pharmacy Management"><span><strong>Pharmacy Management</strong><small>Medicine inventory and dispensing</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Inpatient and Bed Management"><span><strong>Inpatient & Bed Management</strong><small>Admissions and bed availability</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Telemedicine"><span><strong>Telemedicine</strong><small>Remote medical consultation</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Electronic Prescription"><span><strong>Electronic Prescription</strong><small>Digital prescription workflow</small></span></label>
+      </div>
+
+      <div class="subheading">B. Administration & Business Systems</div>
+      <div class="choice-grid">
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Billing and Invoicing"><span><strong>Billing & Invoicing</strong><small>Patient bills and invoices</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Online Payment"><span><strong>Online Payment</strong><small>Digital payment processing</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Insurance Management"><span><strong>Insurance Management</strong><small>Insurance claims and verification</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Inventory Management"><span><strong>Inventory Management</strong><small>Medical supplies and stock</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Human Resource Management"><span><strong>Human Resource Management</strong><small>Staff records and administration</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Payroll Management"><span><strong>Payroll Management</strong><small>Staff salary management</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Procurement Management"><span><strong>Procurement Management</strong><small>Purchasing and suppliers</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Financial Reporting"><span><strong>Financial Reporting</strong><small>Financial statements and dashboards</small></span></label>
+      </div>
+
+      <div class="subheading">C. Communication & Reporting Systems</div>
+      <div class="choice-grid">
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="SMS Notifications"><span><strong>SMS Notifications</strong><small>Appointments and patient reminders</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Email Notifications"><span><strong>Email Notifications</strong><small>Automated email communication</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Management Dashboard"><span><strong>Management Dashboard</strong><small>Performance and operational KPIs</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Analytics and Reporting"><span><strong>Analytics & Reporting</strong><small>Reports and decision support</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Feedback and Complaints"><span><strong>Feedback & Complaints</strong><small>Patient satisfaction management</small></span></label>
+        <label class="choice"><input type="checkbox" name="Hospital Systems" value="Queue Management"><span><strong>Queue Management</strong><small>Patient waiting and service flow</small></span></label>
+      </div>
+    </div>
+
+    <div class="subheading">D. Appointment Booking Details</div>
+    <div class="field">
+      <label>Would you like patients to book appointments online?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Booking" value="Yes"> Yes</label>
+        <label class="radio-choice"><input type="radio" name="Booking" value="No"> No</label>
+        <label class="radio-choice"><input type="radio" name="Booking" value="Future requirement"> In the future</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>What should patients be able to do?</label>
+      <div class="choice-grid">
+        <label class="choice"><input type="checkbox" name="Booking Features" value="Select doctor"><span><strong>Select a Doctor</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Booking Features" value="Select department"><span><strong>Select Department</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Booking Features" value="Select date and time"><span><strong>Select Date & Time</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Booking Features" value="Reschedule appointments"><span><strong>Reschedule Appointments</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Booking Features" value="Cancel appointments"><span><strong>Cancel Appointments</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Booking Features" value="Receive confirmation"><span><strong>Receive Confirmation</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Booking Features" value="Receive reminders"><span><strong>Receive Reminders</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Booking Features" value="Pay online"><span><strong>Pay Online</strong></span></label>
+      </div>
+    </div>
+
+    <div class="subheading">E. Existing Hospital Systems</div>
+    <div class="field">
+      <label>Does the hospital currently use any software systems?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Existing Systems" value="Yes"> Yes</label>
+        <label class="radio-choice"><input type="radio" name="Existing Systems" value="No"> No</label>
+        <label class="radio-choice"><input type="radio" name="Existing Systems" value="Partially"> Partially</label>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>If yes, please specify the systems and whether integration is required.</label>
+        <textarea name="Existing System Details" placeholder="System names, vendors, versions, integration requirements..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="form-section">
+    <div class="section-head">
+      <div class="section-icon"><i class="fa-solid fa-users-gear"></i></div>
+      <div>
+        <h2>Users & Access Management</h2>
+        <p>Identify who will use the website and digital systems.</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Which user categories should have access?</label>
+      <div class="choice-grid">
+        <label class="choice"><input type="checkbox" name="User Roles" value="Patients"><span><strong>Patients</strong><small>Book appointments and access services</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="Doctors"><span><strong>Doctors</strong><small>Manage consultations and records</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="Nurses"><span><strong>Nurses</strong><small>Clinical and patient workflows</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="Laboratory Staff"><span><strong>Laboratory Staff</strong><small>Manage laboratory requests</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="Pharmacy Staff"><span><strong>Pharmacy Staff</strong><small>Manage pharmacy operations</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="Receptionists"><span><strong>Receptionists</strong><small>Patient registration and booking</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="Accountants"><span><strong>Accountants</strong><small>Billing and financial records</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="Hospital Management"><span><strong>Hospital Management</strong><small>Management and reporting</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="System Administrators"><span><strong>System Administrators</strong><small>System configuration and control</small></span></label>
+        <label class="choice"><input type="checkbox" name="User Roles" value="Insurance Providers"><span><strong>Insurance Providers</strong><small>Authorized insurance workflows</small></span></label>
+      </div>
+    </div>
+
+    <div class="subheading">Access & Security Requirements</div>
+    <div class="choice-grid">
+      <label class="choice"><input type="checkbox" name="Security" value="Role Based Access Control"><span><strong>Role-Based Access Control</strong><small>Permissions based on user roles</small></span></label>
+      <label class="choice"><input type="checkbox" name="Security" value="Multi Factor Authentication"><span><strong>Multi-Factor Authentication</strong><small>Additional login protection</small></span></label>
+      <label class="choice"><input type="checkbox" name="Security" value="Audit Logs"><span><strong>Audit Logs</strong><small>Track access and user activities</small></span></label>
+      <label class="choice"><input type="checkbox" name="Security" value="Data Encryption"><span><strong>Data Encryption</strong><small>Protect sensitive information</small></span></label>
+      <label class="choice"><input type="checkbox" name="Security" value="Backup and Recovery"><span><strong>Backup & Recovery</strong><small>Data protection and restoration</small></span></label>
+      <label class="choice"><input type="checkbox" name="Security" value="Session Management"><span><strong>Session Management</strong><small>Secure user sessions</small></span></label>
+    </div>
+
+    <div class="field" style="margin-top:25px">
+      <label>Should the hospital system support multiple branches?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Branches" value="Yes"> Yes</label>
+        <label class="radio-choice"><input type="radio" name="Branches" value="No"> No</label>
+        <label class="radio-choice"><input type="radio" name="Branches" value="Future expansion"> Future expansion</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="form-section">
+    <div class="section-head">
+      <div class="section-icon"><i class="fa-solid fa-plug"></i></div>
+      <div>
+        <h2>Integrations & Infrastructure</h2>
+        <p>Understand the hospital's existing technology environment.</p>
+      </div>
+    </div>
+
+    <div class="subheading">A. Third-Party Integrations</div>
+    <div class="choice-grid">
+      <label class="choice"><input type="checkbox" name="Integrations" value="Telebirr"><span><strong>Telebirr</strong><small>Digital payment integration</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="CBE Birr"><span><strong>CBE Birr</strong><small>Digital payment integration</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="Bank Payment Gateway"><span><strong>Bank Payment Gateway</strong><small>Banking payment services</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="SMS Gateway"><span><strong>SMS Gateway</strong><small>Automated SMS messages</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="Email Services"><span><strong>Email Services</strong><small>Automated notifications</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="Google Maps"><span><strong>Google Maps</strong><small>Hospital location and directions</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="Insurance Providers"><span><strong>Insurance Providers</strong><small>Claims and eligibility integration</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="External Laboratory Systems"><span><strong>External Laboratory Systems</strong><small>Laboratory connectivity</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="Existing APIs"><span><strong>Existing APIs</strong><small>Connect current software</small></span></label>
+      <label class="choice"><input type="checkbox" name="Integrations" value="Other Integrations"><span><strong>Other Integrations</strong></span></label>
+    </div>
+
+    <div class="subheading">B. Hosting & Infrastructure</div>
+    <div class="field">
+      <label>Preferred hosting environment</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Hosting" value="Cloud Hosting"> Cloud Hosting</label>
+        <label class="radio-choice"><input type="radio" name="Hosting" value="Hospital On-Premises"> Hospital On-Premises</label>
+        <label class="radio-choice"><input type="radio" name="Hosting" value="Hybrid"> Hybrid</label>
+        <label class="radio-choice"><input type="radio" name="Hosting" value="Need Recommendation"> Need recommendation</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Does the hospital have existing servers and IT infrastructure?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Infrastructure" value="Yes"> Yes</label>
+        <label class="radio-choice"><input type="radio" name="Infrastructure" value="No"> No</label>
+        <label class="radio-choice"><input type="radio" name="Infrastructure" value="Partially"> Partially</label>
+        <label class="radio-choice"><input type="radio" name="Infrastructure" value="Unknown"> Not sure</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Any existing technical requirements or integration documentation?</label>
+      <textarea name="Technical Details" placeholder="Mention servers, databases, existing applications, APIs, vendors, network requirements..."></textarea>
+    </div>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section class="form-section">
+    <div class="section-head">
+      <div class="section-icon"><i class="fa-solid fa-palette"></i></div>
+      <div>
+        <h2>Design & User Experience</h2>
+        <p>Let's understand your preferred look, feel and experience.</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>What design style do you prefer?</label>
+      <div class="choice-grid">
+        <label class="choice"><input type="radio" name="Design Style" value="Modern and Premium"><span><strong>Modern & Premium</strong><small>Clean, sophisticated and elegant</small></span></label>
+        <label class="choice"><input type="radio" name="Design Style" value="Corporate and Professional"><span><strong>Corporate & Professional</strong><small>Formal institutional identity</small></span></label>
+        <label class="choice"><input type="radio" name="Design Style" value="Minimalist"><span><strong>Minimalist</strong><small>Simple and easy to navigate</small></span></label>
+        <label class="choice"><input type="radio" name="Design Style" value="Innovative and Technology Focused"><span><strong>Innovative & Technology Focused</strong><small>Advanced digital experience</small></span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Preferred color scheme</label>
+      <div class="choice-grid">
+        <label class="choice"><input type="radio" name="Color Scheme" value="Blue and White"><span><strong>Blue & White</strong><small>Trust and professionalism</small></span></label>
+        <label class="choice"><input type="radio" name="Color Scheme" value="Green and White"><span><strong>Green & White</strong><small>Health and wellness</small></span></label>
+        <label class="choice"><input type="radio" name="Color Scheme" value="Navy and Gold"><span><strong>Navy & Gold</strong><small>Premium identity</small></span></label>
+        <label class="choice"><input type="radio" name="Color Scheme" value="Hospital Brand Colors"><span><strong>Existing Hospital Colors</strong><small>Follow official branding</small></span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Does the hospital have an official logo and brand guidelines?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Branding" value="Yes, available"> Yes, available</label>
+        <label class="radio-choice"><input type="radio" name="Branding" value="Logo only"> Logo only</label>
+        <label class="radio-choice"><input type="radio" name="Branding" value="Needs branding"> Needs branding support</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Which devices should the platform support?</label>
+      <div class="choice-grid">
+        <label class="choice"><input type="checkbox" name="Devices" value="Desktop Computers"><span><strong>Desktop Computers</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Devices" value="Laptops"><span><strong>Laptops</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Devices" value="Tablets"><span><strong>Tablets</strong></span></label>
+        <label class="choice"><input type="checkbox" name="Devices" value="Mobile Phones"><span><strong>Mobile Phones</strong></span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Would you also need a dedicated mobile application?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Mobile App" value="Android"> Android</label>
+        <label class="radio-choice"><input type="radio" name="Mobile App" value="iOS"> iOS</label>
+        <label class="radio-choice"><input type="radio" name="Mobile App" value="Both"> Both</label>
+        <label class="radio-choice"><input type="radio" name="Mobile App" value="No"> No</label>
+        <label class="radio-choice"><input type="radio" name="Mobile App" value="Future"> Future requirement</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7 -->
+  <section class="form-section">
+    <div class="section-head">
+      <div class="section-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+      <div>
+        <h2>Project Expectations & Final Requirements</h2>
+        <p>Help us understand your priorities and expectations.</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>What is your expected project timeline?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Timeline" value="Within 1 month"> Within 1 month</label>
+        <label class="radio-choice"><input type="radio" name="Timeline" value="1 to 3 months"> 1–3 months</label>
+        <label class="radio-choice"><input type="radio" name="Timeline" value="3 to 6 months"> 3–6 months</label>
+        <label class="radio-choice"><input type="radio" name="Timeline" value="More than 6 months"> More than 6 months</label>
+        <label class="radio-choice"><input type="radio" name="Timeline" value="Not determined"> Not determined</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>What is the implementation priority?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Priority" value="Website only"> Website only</label>
+        <label class="radio-choice"><input type="radio" name="Priority" value="Website and booking system"> Website + Booking System</label>
+        <label class="radio-choice"><input type="radio" name="Priority" value="Complete hospital system"> Complete Hospital System</label>
+        <label class="radio-choice"><input type="radio" name="Priority" value="Phased implementation"> Phased Implementation</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Do you require ongoing technical support and maintenance?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Maintenance" value="Yes"> Yes</label>
+        <label class="radio-choice"><input type="radio" name="Maintenance" value="No"> No</label>
+        <label class="radio-choice"><input type="radio" name="Maintenance" value="Need details"> Need more details</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>What are your top three priorities?</label>
+      <textarea name="Top Priorities" placeholder="1.&#10;2.&#10;3."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Any additional requirements, expectations or recommendations?</label>
+      <textarea name="Additional Requirements" placeholder="Please share any other features, systems, services or expectations not covered above..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Would you like us to prepare a technical and financial proposal?</label>
+      <div class="radio-grid">
+        <label class="radio-choice"><input type="radio" name="Proposal" value="Yes"> Yes</label>
+        <label class="radio-choice"><input type="radio" name="Proposal" value="No"> No</label>
+        <label class="radio-choice"><input type="radio" name="Proposal" value="After consultation"> After consultation</label>
+      </div>
+    </div>
+
+    <div class="note">
+      <i class="fa-solid fa-lock"></i>
+      Please do not enter actual patient names, medical records, passwords,
+      or other confidential patient information in this questionnaire.
+      This form is for project requirements gathering only.
+    </div>
+
+    <div class="summary-box">
+      <h3><i class="fa-solid fa-file-circle-check"></i> Ready to complete?</h3>
+      <p>Your selected requirements will be compiled into a summary that you can review, print or send to the development team.</p>
+      <p><strong>Note:</strong> Submission through this demonstration page does not automatically store information on a server. Use the print or email option, or connect a secure backend before deployment.</p>
+    </div>
+  </section>
+
+  <div class="navigation">
+    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>
+      <i class="fa-solid fa-arrow-left"></i> Previous
+    </button>
+    <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+      Continue <i class="fa-solid fa-arrow-right"></i>
+    </button>
+    <button type="button" class="btn btn-success hidden" id="finishBtn" onclick="finishForm()">
+      Complete Assessment <i class="fa-solid fa-check"></i>
+    </button>
+  </div>
+
+  </form>
+
+  <section id="result" class="hidden form-section active">
+    <div style="text-align:center;padding:20px 0">
+      <div class="section-icon" style="margin:auto;width:75px;height:75px;font-size:30px;background:#e5f8f1;color:#149b78">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h2 style="margin-top:20px;color:var(--navy)">Assessment Completed!</h2>
+      <p style="color:var(--muted);margin-top:8px">Your hospital's requirements summary is ready.</p>
+    </div>
+
+    <div id="summaryContent" class="summary-box"></div>
+
+    <div class="navigation" style="justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save PDF</button>
+      <button class="btn btn-secondary" onclick="copySummary()"><i class="fa-regular fa-copy"></i> Copy Summary</button>
+      <button class="btn btn-success" onclick="emailSummary()"><i class="fa-regular fa-envelope"></i> Prepare Email</button>
+    </div>
+    <p id="copyMessage" style="text-align:center;font-size:12px;color:var(--green);margin-top:12px"></p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <strong><i class="fa-solid fa-heart-pulse foot-icon"></i> Healthcare Digital Transformation</strong>
+  <p>Building smarter healthcare experiences through technology, innovation and digital solutions.</p>
+  <p style="margin-top:18px">Hospital Website & Digital Systems Requirements Assessment</p>
+</footer>
+
+<script>
+let currentStep = 0;
+const sections = document.querySelectorAll('.form-section:not(#result)');
+const totalSteps = sections.length;
+
+function updateProgress(){
+  const percent = Math.round(((currentStep + 1) / totalSteps) * 100);
+  document.getElementById('progressFill').style.width = percent + '%';
+  document.getElementById('progressLabel').textContent =
+    `Section ${currentStep + 1} of ${totalSteps}`;
+  document.getElementById('progressPercent').textContent = percent + '%';
+
+  document.querySelectorAll('.step-dot').forEach((dot,i)=>{
+    dot.classList.toggle('active',i===currentStep);
+  });
+
+  document.getElementById('prevBtn').disabled = currentStep === 0;
+  document.getElementById('nextBtn').classList.toggle('hidden',currentStep === totalSteps-1);
+  document.getElementById('finishBtn').classList.toggle('hidden',currentStep !== totalSteps-1);
+}
+
+function showStep(){
+  sections.forEach((section,i)=>{
+    section.classList.toggle('active',i===currentStep);
+  });
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function validateStep(){
+  const fields = sections[currentStep].querySelectorAll('[required]');
+  for(const field of fields){
+    if(!field.checkValidity()){
+      field.reportValidity();
+      return false;
+    }
+  }
+  return true;
+}
+
+function changeStep(direction){
+  if(direction > 0 && !validateStep()) return;
+  currentStep = Math.max(0,Math.min(totalSteps-1,currentStep+direction));
+  showStep();
+}
+
+// Reveal the systems checklist when requested.
+document.querySelectorAll('.system-radio').forEach(radio=>{
+  radio.addEventListener('change',()=>{
+    const show = document.querySelector('.system-radio:checked')?.value === 'Yes';
+    document.getElementById('systemOptions').classList.toggle('show',show);
+  });
+});
+
+function getFormData(){
+  const form = document.getElementById('hospitalForm');
+  const data = {};
+  const formData = new FormData(form);
+
+  for(const [key,value] of formData.entries()){
+    if(data[key]){
+      data[key] += ', ' + value;
+    } else {
+      data[key] = value;
+    }
+  }
+  return data;
+}
+
+function buildSummary(){
+  const data = getFormData();
+  let html = '';
+  let text = 'HOSPITAL DIGITAL REQUIREMENTS ASSESSMENT\n';
+  text += '========================================\n\n';
+
+  const groups = [
+    ['Hospital Information',['Hospital Name','Hospital Type','Location','Existing Website','Contact Person','Position','Email','Phone','Hospital Description']],
+    ['Project Objectives',['Objectives']],
+    ['Website Requirements',['Website Pages','Website Features','Languages']],
+    ['Hospital Systems',['Need Systems','Hospital Systems','Booking','Booking Features','Existing Systems','Existing System Details']],
+    ['Users & Security',['User Roles','Security','Branches']],
+    ['Integrations & Infrastructure',['Integrations','Hosting','Infrastructure','Technical Details']],
+    ['Design & Experience',['Design Style','Color Scheme','Branding','Devices','Mobile App']],
+    ['Project Expectations',['Timeline','Priority','Maintenance','Top Priorities','Additional Requirements','Proposal']]
+  ];
+
+  groups.forEach(([heading,keys])=>{
+    let items = '';
+    let textItems = '';
+    keys.forEach(key=>{
+      if(data[key]){
+        items += `<p><strong>${escapeHTML(key)}:</strong> ${escapeHTML(data[key])}</p>`;
+        textItems += `${key}: ${data[key]}\n`;
+      }
+    });
+    if(items){
+      html += `<div style="margin-bottom:22px"><h3>${heading}</h3>${items}</div>`;
+      text += heading.toUpperCase() + '\n' + textItems + '\n';
+    }
+  });
+
+  return {html,text};
+}
+
+function escapeHTML(str){
+  return String(str).replace(/[&<>"']/g,char=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[char]);
+}
+
+let finalText = '';
+
+function finishForm(){
+  if(!validateStep()) return;
+
+  const result = buildSummary();
+  finalText = result.text;
+
+  document.getElementById('summaryContent').innerHTML =
+    result.html || '<p>No requirements selected.</p>';
+
+  document.getElementById('hospitalForm').classList.add('hidden');
+  document.querySelector('.progress-card').classList.add('hidden');
+  document.querySelector('.intro').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function copySummary(){
+  try{
+    await navigator.clipboard.writeText(finalText);
+    document.getElementById('copyMessage').textContent =
+      'Summary copied successfully!';
+  }catch(e){
+    document.getElementById('copyMessage').textContent =
+      'Copy unavailable. Please use Print / Save PDF.';
+  }
+}
+
+function emailSummary(){
+  const data = getFormData();
+  const recipient = 'YOUR_EMAIL@example.com';
+  const subject = encodeURIComponent(
+    'Hospital Digital Requirements - ' + (data['Hospital Name'] || 'New Assessment')
+  );
+  const body = encodeURIComponent(finalText);
+  window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+}
+
+updateProgress();
+</script>
+
+</body>
+</html>
