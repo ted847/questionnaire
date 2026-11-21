@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -120,7 +119,7 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <div class="field"><label class="title">City / Location</label><input name="Location" type="text" placeholder="Location"></div>
 <div class="field"><label class="title">Contact Person</label><input name="Contact Person" type="text" placeholder="Full name"></div>
 <div class="field"><label class="title">Position</label><input name="Position" type="text" placeholder="e.g. Medical Director"></div>
-<div class="field"><label class="title">Email Address</label><input name="Email" type="email" placeholder="Email"></div>
+<div class="field"><label class="title">Email Address</label><input name="Email" type="email" placeholder="your.email@example.com"></div>
 <div class="field"><label class="title">Phone Number</label><input name="Phone" type="tel" placeholder="+251"></div>
 <div class="field"><label class="title">Existing Website (if any)</label><input name="Existing Website" type="text" placeholder="Website address"></div>
 </div>
@@ -314,13 +313,13 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <div class="result">
 <i class="fa-solid fa-circle-check"></i>
 <h2 style="color:var(--navy);margin-top:15px">Thank You!</h2>
-<p style="color:var(--muted)">Your hospital's requirements summary is ready.</p>
+<p style="color:var(--muted)" id="recipientNote">Your hospital's requirements summary is ready to send to your email.</p>
 </div>
 <div class="summary" id="summary"></div>
 <div class="buttons" style="justify-content:center;flex-wrap:wrap">
 <button class="btn primary" onclick="window.print()">Print / Save PDF</button>
 <button class="btn secondary" onclick="copy()">Copy Summary</button>
-<button class="btn success" onclick="email()">Prepare Email</button>
+<button class="btn success" onclick="email()">Send to My Email</button>
 </div>
 <p id="message" style="text-align:center;font-size:12px;color:var(--green)"></p>
 </section>
@@ -334,6 +333,7 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <script>
 const sections=[...document.querySelectorAll('#form .section')];
 let step=0,summaryText='';
+
 function render(){
 sections.forEach((s,i)=>s.classList.toggle('active',i===step));
 let pct=Math.round((step+1)/sections.length*100);
@@ -344,6 +344,7 @@ document.getElementById('prev').disabled=step===0;
 document.getElementById('next').classList.toggle('hidden',step===sections.length-1);
 document.getElementById('finish').classList.toggle('hidden',step!==sections.length-1);
 }
+
 function move(dir){
 if(dir>0){
 for(const el of sections[step].querySelectorAll('[required]')){
@@ -353,21 +354,35 @@ if(!el.checkValidity()){el.reportValidity();return;}
 step=Math.max(0,Math.min(sections.length-1,step+dir));
 render();window.scrollTo({top:0,behavior:'smooth'});
 }
+
+function toggleSystemArea(){
+const show=document.getElementById('sysYes').checked;
+const area=document.getElementById('systemArea');
+area.classList.toggle('show',show);
+area.querySelectorAll('input').forEach(inp=>{
+inp.disabled=!show;
+if(!show)inp.checked=false;
+});
+}
+
 document.querySelectorAll('[name="Need System"]').forEach(el=>{
-el.addEventListener('change',()=>{
-document.getElementById('systemArea').classList.toggle('show',document.getElementById('sysYes').checked);
+el.addEventListener('change',toggleSystemArea);
 });
-});
+toggleSystemArea();
+
 function collect(){
 let data={};
 new FormData(document.getElementById('form')).forEach((v,k)=>{
+if(!v)return;
 data[k]=data[k]?[data[k],v].flat().join(', '):v;
 });
 return data;
 }
+
 function escape(s){
 return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+
 function finish(){
 const d=collect();
 const groups={
@@ -386,21 +401,35 @@ if(rows){html+=`<h3>${heading}</h3>${rows}<br>`;txt+=heading+'\n'+keys.filter(k=
 }
 summaryText=txt;
 document.getElementById('summary').innerHTML=html||'No answers recorded.';
+document.getElementById('recipientNote').textContent=d['Email']
+  ? `Your hospital's requirements summary is ready to send to ${d['Email']}.`
+  : `Your hospital's requirements summary is ready. Enter your email address in Section 1 to pre-fill the recipient.`;
 document.getElementById('form').classList.add('hidden');
 document.getElementById('result').classList.add('active');
 document.querySelector('.progress').classList.add('hidden');
 window.scrollTo({top:0,behavior:'smooth'});
 }
+
 async function copy(){
 try{await navigator.clipboard.writeText(summaryText);document.getElementById('message').textContent='Summary copied!';}
 catch(e){document.getElementById('message').textContent='Use Print / Save PDF instead.';}
 }
+
 function email(){
 const d=collect();
-const subject=encodeURIComponent('Hospital Website Requirements - '+(d['Hospital Name']||'New Assessment'));
-const body=encodeURIComponent(summaryText);
-window.location.href='mailto:YOUR_EMAIL@example.com?subject='+subject+'&body='+body;
+const toEmail=(d['Email']||'').trim();
+const hospital=d['Hospital Name']||'New Assessment';
+const recipientName=d['Contact Person']||'there';
+const subject=encodeURIComponent('Hospital Digital Requirements Summary - '+hospital);
+const greeting=`Hello ${recipientName},\n\nThank you for completing the Hospital Website & Digital Services Assessment for ${hospital}. Here is a copy of the responses for your records:\n\n`;
+const closing=`\nThank you again,\nHealthcare Digital Solutions`;
+const body=encodeURIComponent(greeting+summaryText+closing);
+window.location.href=`mailto:${encodeURIComponent(toEmail)}?subject=${subject}&body=${body}`;
+document.getElementById('message').textContent=toEmail
+  ? `Opening email client to ${toEmail}...`
+  : 'Opening email client (enter your email address in Section 1 to auto-fill the "To" field).';
 }
+
 render();
 </script>
 </body>
