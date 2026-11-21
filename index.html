@@ -6,6 +6,7 @@
 <title>Hospital Website & Digital Services Assessment</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--navy:#09213a;--blue:#087fc1;--cyan:#19b9c5;--bg:#f3f7fb;--muted:#74879a;--line:#e1eaf1;--green:#159b76}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -119,7 +120,7 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <div class="field"><label class="title">City / Location</label><input name="Location" type="text" placeholder="Location"></div>
 <div class="field"><label class="title">Contact Person</label><input name="Contact Person" type="text" placeholder="Full name"></div>
 <div class="field"><label class="title">Position</label><input name="Position" type="text" placeholder="e.g. Medical Director"></div>
-<div class="field"><label class="title">Email Address</label><input name="Email" type="email" placeholder="your.email@example.com"></div>
+<div class="field"><label class="title">Your Email Address *</label><input name="Email" required type="email" placeholder="your.email@example.com"></div>
 <div class="field"><label class="title">Phone Number</label><input name="Phone" type="tel" placeholder="+251"></div>
 <div class="field"><label class="title">Existing Website (if any)</label><input name="Existing Website" type="text" placeholder="Website address"></div>
 </div>
@@ -313,15 +314,15 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <div class="result">
 <i class="fa-solid fa-circle-check"></i>
 <h2 style="color:var(--navy);margin-top:15px">Thank You!</h2>
-<p style="color:var(--muted)" id="recipientNote">Your hospital's requirements summary is ready to send to your email.</p>
+<p style="color:var(--muted)" id="recipientNote">Your PDF requirements report has been generated.</p>
 </div>
 <div class="summary" id="summary"></div>
 <div class="buttons" style="justify-content:center;flex-wrap:wrap">
-<button class="btn primary" onclick="window.print()">Print / Save PDF</button>
+<button class="btn primary" onclick="downloadPdf()">Download PDF Report</button>
 <button class="btn secondary" onclick="copy()">Copy Summary</button>
-<button class="btn success" onclick="email()">Send to My Email</button>
+<button class="btn success" onclick="retryPdfSend()">Resend PDF Report</button>
 </div>
-<p id="message" style="text-align:center;font-size:12px;color:var(--green)"></p>
+<p id="message" style="text-align:center;font-size:12px;color:var(--green);margin-top:12px"></p>
 </section>
 </main>
 
@@ -331,8 +332,24 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 </footer>
 
 <script>
+// Optional fallback email if Section 1's Email field is empty
+const MY_EMAIL = '';
+
+// Point this to your backend/webhook/relay endpoint that accepts FormData (including `pdf` file)
+// and emails it to `to_email`. Leave empty ('') to download PDF locally and open a mail fallback.
+const PDF_MAIL_ENDPOINT = '';
+
 const sections=[...document.querySelectorAll('#form .section')];
-let step=0,summaryText='';
+const GROUPS={
+'ABOUT THE HOSPITAL':['Hospital Name','Hospital Type','Location','Contact Person','Position','Email','Phone','Existing Website','Main Services','Objectives'],
+'WEBSITE REQUIREMENTS':['Website Pages','Website Features','Languages'],
+'PATIENT SERVICES':['Patient Services','Booking','Booking Management'],
+'HOSPITAL SYSTEMS':['Need System','Systems','Reports','Staff Login'],
+'DESIGN PREFERENCES':['Style','Colors','Logo','Mobile App','Reference Website'],
+'PROJECT EXPECTATIONS':['Priority','Timeline','Support','Top Expectations','Additional Comments','Proposal']
+};
+
+let step=0,summaryText='',lastData={},lastPdfBlob=null,lastPdfName='Hospital-Requirements.pdf';
 
 function render(){
 sections.forEach((s,i)=>s.classList.toggle('active',i===step));
@@ -383,51 +400,160 @@ function escape(s){
 return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+function buildPdfBlob(data){
+const {jsPDF}=window.jspdf;
+const doc=new jsPDF({unit:'pt',format:'a4'});
+const pageWidth=doc.internal.pageSize.getWidth();
+const pageHeight=doc.internal.pageSize.getHeight();
+const margin=45;
+const maxWidth=pageWidth-margin*2;
+let y=55;
+
+doc.setFillColor(9,33,58);
+doc.rect(0,0,pageWidth,85,'F');
+doc.setTextColor(255,255,255);
+doc.setFont('helvetica','bold');
+doc.setFontSize(17);
+doc.text('Hospital Website & Digital Services Assessment',margin,38);
+doc.setFont('helvetica','normal');
+doc.setFontSize(10);
+doc.setTextColor(192,217,233);
+doc.text(`Generated: ${new Date().toLocaleString()}`,margin,60);
+
+y=112;
+doc.setTextColor(36,59,80);
+
+for(const [heading,keys] of Object.entries(GROUPS)){
+const entries=keys.filter(k=>data[k]);
+if(!entries.length)continue;
+
+if(y>pageHeight-80){doc.addPage();y=55;}
+doc.setFont('helvetica','bold');
+doc.setFontSize(12);
+doc.setTextColor(8,127,193);
+doc.text(heading,margin,y);
+y+=8;
+doc.setDrawColor(225,234,241);
+doc.line(margin,y,pageWidth-margin,y);
+y+=16;
+
+for(const k of entries){
+const line=`${k}: ${data[k]}`;
+doc.setFont('helvetica','normal');
+doc.setFontSize(10);
+doc.setTextColor(36,59,80);
+const wrapped=doc.splitTextToSize(line,maxWidth);
+for(const wLine of wrapped){
+if(y>pageHeight-45){doc.addPage();y=55;}
+doc.text(wLine,margin,y);
+y+=15;
+}
+y+=4;
+}
+y+=10;
+}
+
+return doc.output('blob');
+}
+
+function triggerBlobDownload(blob,filename){
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;
+a.download=filename;
+document.body.appendChild(a);
+a.click();
+a.remove();
+setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+function downloadPdf(){
+if(!lastPdfBlob)return;
+triggerBlobDownload(lastPdfBlob,lastPdfName);
+document.getElementById('message').textContent=`Downloaded ${lastPdfName}.`;
+}
+
+async function sendPdfReport(pdfBlob,data){
+const toEmail=(data['Email']||MY_EMAIL||'').trim();
+const hospital=data['Hospital Name']||'New Assessment';
+const name=data['Contact Person']||'there';
+const msgEl=document.getElementById('message');
+
+if(!toEmail){
+msgEl.textContent='PDF generated. Enter your email in Section 1 to send automatically.';
+return;
+}
+
+if(PDF_MAIL_ENDPOINT){
+try{
+msgEl.textContent=`Sending PDF report (${lastPdfName}) to ${toEmail}...`;
+const formData=new FormData();
+formData.append('to_email',toEmail);
+formData.append('hospital_name',hospital);
+formData.append('contact_name',name);
+formData.append('summary_text',summaryText);
+formData.append('pdf',pdfBlob,lastPdfName);
+
+const res=await fetch(PDF_MAIL_ENDPOINT,{method:'POST',body:formData});
+if(!res.ok)throw new Error(`HTTP ${res.status}`);
+msgEl.textContent=`PDF report sent to ${toEmail}.`;
+return;
+}catch(err){
+msgEl.textContent=`Could not auto-send (${err.message}). PDF downloaded—attach ${lastPdfName} in your email client.`;
+}
+}else{
+msgEl.textContent=`PDF (${lastPdfName}) saved locally. Because browsers cannot attach files via mailto, attach ${lastPdfName} to the opened email for ${toEmail}.`;
+}
+
+const subject=encodeURIComponent('Hospital Digital Requirements PDF Report - '+hospital);
+const body=encodeURIComponent(`Hello ${name},\n\nThank you for completing the Hospital Website & Digital Services Assessment for ${hospital}. Please find the generated PDF report (${lastPdfName}) attached or review the summary below:\n\n${summaryText}\nThank you again,\nHealthcare Digital Solutions`);
+window.location.href=`mailto:${encodeURIComponent(toEmail)}?subject=${subject}&body=${body}`;
+}
+
+function retryPdfSend(){
+if(!lastPdfBlob)return;
+sendPdfReport(lastPdfBlob,lastData);
+}
+
 function finish(){
+const emailInput=document.querySelector('input[name="Email"]');
+if(emailInput && !emailInput.checkValidity()){
+step=0;
+render();
+emailInput.reportValidity();
+return;
+}
 const d=collect();
-const groups={
-'ABOUT THE HOSPITAL':['Hospital Name','Hospital Type','Location','Contact Person','Position','Email','Phone','Existing Website','Main Services','Objectives'],
-'WEBSITE REQUIREMENTS':['Website Pages','Website Features','Languages'],
-'PATIENT SERVICES':['Patient Services','Booking','Booking Management'],
-'HOSPITAL SYSTEMS':['Need System','Systems','Reports','Staff Login'],
-'DESIGN PREFERENCES':['Style','Colors','Logo','Mobile App','Reference Website'],
-'PROJECT EXPECTATIONS':['Priority','Timeline','Support','Top Expectations','Additional Comments','Proposal']
-};
+lastData=d;
+const safeHospital=(d['Hospital Name']||'Hospital').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'');
+lastPdfName=`${safeHospital}-Digital-Requirements.pdf`;
+
 let html='',txt='HOSPITAL DIGITAL REQUIREMENTS\n\n';
-for(let [heading,keys] of Object.entries(groups)){
+for(let [heading,keys] of Object.entries(GROUPS)){
 let rows='';
 keys.forEach(k=>{if(d[k])rows+=`<p><b>${escape(k)}:</b> ${escape(d[k])}</p>\n`});
 if(rows){html+=`<h3>${heading}</h3>${rows}<br>`;txt+=heading+'\n'+keys.filter(k=>d[k]).map(k=>k+': '+d[k]).join('\n')+'\n\n';}
 }
 summaryText=txt;
+lastPdfBlob=buildPdfBlob(d);
+triggerBlobDownload(lastPdfBlob,lastPdfName);
+
 document.getElementById('summary').innerHTML=html||'No answers recorded.';
-document.getElementById('recipientNote').textContent=d['Email']
-  ? `Your hospital's requirements summary is ready to send to ${d['Email']}.`
-  : `Your hospital's requirements summary is ready. Enter your email address in Section 1 to pre-fill the recipient.`;
+const targetEmail=(d['Email']||MY_EMAIL||'').trim();
+document.getElementById('recipientNote').textContent=targetEmail
+  ? `Your PDF report (${lastPdfName}) is ready and being sent to ${targetEmail}.`
+  : `Your PDF report (${lastPdfName}) has been generated and downloaded.`;
 document.getElementById('form').classList.add('hidden');
 document.getElementById('result').classList.add('active');
 document.querySelector('.progress').classList.add('hidden');
 window.scrollTo({top:0,behavior:'smooth'});
+
+sendPdfReport(lastPdfBlob,d);
 }
 
 async function copy(){
 try{await navigator.clipboard.writeText(summaryText);document.getElementById('message').textContent='Summary copied!';}
-catch(e){document.getElementById('message').textContent='Use Print / Save PDF instead.';}
-}
-
-function email(){
-const d=collect();
-const toEmail=(d['Email']||'').trim();
-const hospital=d['Hospital Name']||'New Assessment';
-const recipientName=d['Contact Person']||'there';
-const subject=encodeURIComponent('Hospital Digital Requirements Summary - '+hospital);
-const greeting=`Hello ${recipientName},\n\nThank you for completing the Hospital Website & Digital Services Assessment for ${hospital}. Here is a copy of the responses for your records:\n\n`;
-const closing=`\nThank you again,\nHealthcare Digital Solutions`;
-const body=encodeURIComponent(greeting+summaryText+closing);
-window.location.href=`mailto:${encodeURIComponent(toEmail)}?subject=${subject}&body=${body}`;
-document.getElementById('message').textContent=toEmail
-  ? `Opening email client to ${toEmail}...`
-  : 'Opening email client (enter your email address in Section 1 to auto-fill the "To" field).';
+catch(e){document.getElementById('message').textContent='Use Download PDF Report instead.';}
 }
 
 render();
