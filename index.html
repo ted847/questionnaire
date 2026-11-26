@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hospital Website & Digital Services Assessment</title>
+<title>Hospital Website Assessment</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--navy:#09213a;--blue:#087fc1;--cyan:#19b9c5;--bg:#f3f7fb;--muted:#74879a;--line:#e1eaf1;--green:#159b76}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -60,23 +59,27 @@ textarea{min-height:100px;resize:vertical}
 .radios input{accent-color:var(--blue);margin-right:6px}
 .sub{font-size:14px;font-weight:800;color:var(--navy);margin:27px 0 13px;border-bottom:1px solid var(--line);padding-bottom:8px}
 .hint{padding:14px;background:#eef8fc;border-radius:9px;color:#41687f;font-size:12px;margin:15px 0}
-.conditional{display:none;background:#f5faff;border:1px dashed #aacce0;padding:18px;border-radius:12px;margin-top:15px}
-.conditional.show{display:block}
-.buttons{display:flex;justify-content:space-between;gap:12px;margin-top:23px}
+.buttons{display:flex;justify-content:space-between;gap:12px;margin-top:23px;flex-wrap:wrap}
 .btn{border:0;border-radius:9px;padding:13px 21px;font-size:13px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
 .primary{background:var(--blue);color:white}
 .secondary{background:#e9f0f6;color:#3e576d}
 .success{background:var(--green);color:white}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
 .hidden{display:none!important}
 .result{text-align:center;padding:35px 10px}
 .result i{font-size:55px;color:var(--green)}
 .summary{text-align:left;background:#f5faff;padding:20px;border-radius:12px;margin:22px 0}
 .summary h3{font-size:15px;color:var(--navy);margin-bottom:9px}
 .summary p{font-size:12px;margin:5px 0}
+.sendstatus{display:none;align-items:center;gap:9px;justify-content:center;font-size:13px;font-weight:700;padding:13px 16px;border-radius:10px;margin:0 0 18px;text-align:center;line-height:1.45}
+.sendstatus.show{display:flex}
+.sendstatus.pending{background:#eef8fc;color:#087fc1;border:1px solid #cfe9f5}
+.sendstatus.ok{background:#e9f9f2;color:#0f7a5c;border:1px solid #bfe9d8}
+.sendstatus.err{background:#fdf0ef;color:#b23a30;border:1px solid #f6d3cf}
 footer{background:var(--navy);color:white;text-align:center;padding:30px 15px}
 footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 @media(max-width:600px){.hero{padding:22px 6% 75px}.hero-content{margin-top:55px}nav small{display:none}.grid,.choices{grid-template-columns:1fr}.section{padding:21px 16px}.head h2{font-size:19px}}
-@media print{.hero{padding:20px}.progress,.buttons,footer{display:none!important}.section{display:block!important;box-shadow:none;break-inside:avoid}.conditional{display:block!important}}
+@media print{.hero{padding:20px}.progress,.buttons,footer{display:none!important}.section{display:block!important;box-shadow:none;break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -84,24 +87,24 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <header class="hero">
 <nav>
  <div class="logo"><i class="fa-solid fa-heart-pulse"></i> HEALTHCARE DIGITAL</div>
- <small>HOSPITAL REQUIREMENTS ASSESSMENT</small>
+ <small>HOSPITAL WEBSITE ASSESSMENT</small>
 </nav>
 <div class="hero-content">
- <div class="tag">YOUR HOSPITAL. YOUR VISION. OUR SOLUTION.</div>
- <h1>Let's Understand Your <span>Digital Needs.</span></h1>
- <p>We would love to understand how your hospital serves patients today and how technology could make your services more accessible, efficient and convenient.</p>
+ <div class="tag">YOUR HOSPITAL. YOUR WEBSITE. YOUR VISION.</div>
+ <h1>Let's Design Your <span>Hospital Website.</span></h1>
+ <p>Help us understand what you want your hospital website to look like, what it should do for your patients, and how it should represent your institution online.</p>
  <div class="hero-meta">
-  <span><i class="fa-regular fa-clock"></i> 5–8 minutes</span>
+  <span><i class="fa-regular fa-clock"></i> 4–6 minutes</span>
   <span><i class="fa-solid fa-list-check"></i> 6 simple sections</span>
-  <span><i class="fa-solid fa-heart"></i> Designed for healthcare providers</span>
+  <span><i class="fa-solid fa-globe"></i> Website focused</span>
  </div>
 </div>
 </header>
 
 <main class="container">
 <div class="intro">
-<h2>Hospital Website & Digital Services Questionnaire</h2>
-<p>Dear Hospital Management, your answers will help us understand your expectations and prepare a solution that best meets the needs of your hospital and patients. Please select all options that apply.</p>
+<h2>Hospital Website Questionnaire</h2>
+<p>Dear Hospital Management, your answers will help us design a website that presents your hospital professionally, informs your patients clearly, and makes it easy for people to reach your services online. Please select all options that apply.</p>
 </div>
 
 <div class="progress">
@@ -120,47 +123,49 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <div class="field"><label class="title">City / Location</label><input name="Location" type="text" placeholder="Location"></div>
 <div class="field"><label class="title">Contact Person</label><input name="Contact Person" type="text" placeholder="Full name"></div>
 <div class="field"><label class="title">Position</label><input name="Position" type="text" placeholder="e.g. Medical Director"></div>
-<div class="field"><label class="title">Email Address</label><input name="Email" type="email" placeholder="tewodroswondu123@gmail.com"></div>
+<div class="field"><label class="title">Email Address</label><input name="Email" type="email" placeholder="you@hospital.com"></div>
 <div class="field"><label class="title">Phone Number</label><input name="Phone" type="tel" placeholder="+251"></div>
 <div class="field"><label class="title">Existing Website (if any)</label><input name="Existing Website" type="text" placeholder="Website address"></div>
 </div>
 <div class="field"><label class="title">What are the main services your hospital provides?</label><textarea name="Main Services" placeholder="Describe your medical specialties and services..."></textarea></div>
-<div class="field"><label class="title">What would you most like to improve through this project?</label><div class="choices">
-<label class="choice"><input type="checkbox" name="Objectives" value="Hospital visibility"><span><strong>Hospital visibility</strong><small>Reach more people and attract patients</small></span></label>
-<label class="choice"><input type="checkbox" name="Objectives" value="Patient convenience"><span><strong>Patient convenience</strong><small>Make accessing services easier</small></span></label>
-<label class="choice"><input type="checkbox" name="Objectives" value="Digital operations"><span><strong>Hospital operations</strong><small>Reduce paperwork and manual work</small></span></label>
-<label class="choice"><input type="checkbox" name="Objectives" value="Communication"><span><strong>Communication</strong><small>Improve communication with patients</small></span></label>
+<div class="field"><label class="title">What would you most like to improve through your new website?</label><div class="choices">
+<label class="choice"><input type="checkbox" name="Objectives" value="Online visibility"><span><strong>Online visibility</strong><small>Be found easily on the internet</small></span></label>
+<label class="choice"><input type="checkbox" name="Objectives" value="Patient convenience"><span><strong>Patient convenience</strong><small>Make accessing information easier</small></span></label>
+<label class="choice"><input type="checkbox" name="Objectives" value="Communication"><span><strong>Patient communication</strong><small>Improve contact with patients</small></span></label>
+<label class="choice"><input type="checkbox" name="Objectives" value="Professional image"><span><strong>Professional image</strong><small>Present a modern hospital brand</small></span></label>
 <label class="choice"><input type="checkbox" name="Objectives" value="All"><span><strong>All of the above</strong></span></label>
 </div></div>
 </section>
 
 <!-- 2 -->
 <section class="section">
-<div class="head"><div class="headicon"><i class="fa-solid fa-globe"></i></div><div><h2>Your Hospital Website</h2><p>What information would you like visitors to see?</p></div></div>
-<div class="hint">Select the pages you would like to have on your website.</div>
+<div class="head"><div class="headicon"><i class="fa-solid fa-globe"></i></div><div><h2>Website Pages & Content</h2><p>Which pages should your website contain?</p></div></div>
+<div class="hint">Select the pages you would like on your hospital website.</div>
 <div class="choices">
 <label class="choice"><input type="checkbox" name="Website Pages" value="Home Page"><span><strong>Home Page</strong><small>Welcome and hospital overview</small></span></label>
 <label class="choice"><input type="checkbox" name="Website Pages" value="About Us"><span><strong>About Our Hospital</strong><small>History, vision, mission and values</small></span></label>
-<label class="choice"><input type="checkbox" name="Website Pages" value="Doctors"><span><strong>Our Doctors</strong><small>Doctor photos, profiles and specialties</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Pages" value="Doctors"><span><strong>Our Doctors</strong><small>Photos, profiles and specialties</small></span></label>
 <label class="choice"><input type="checkbox" name="Website Pages" value="Departments"><span><strong>Medical Departments</strong><small>All hospital departments</small></span></label>
 <label class="choice"><input type="checkbox" name="Website Pages" value="Services"><span><strong>Medical Services</strong><small>Treatments and services offered</small></span></label>
-<label class="choice"><input type="checkbox" name="Website Pages" value="Facilities"><span><strong>Facilities and Equipment</strong><small>Hospital buildings and equipment</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Pages" value="Facilities"><span><strong>Facilities & Equipment</strong><small>Buildings and medical equipment</small></span></label>
 <label class="choice"><input type="checkbox" name="Website Pages" value="Gallery"><span><strong>Photo Gallery</strong><small>Hospital environment and activities</small></span></label>
-<label class="choice"><input type="checkbox" name="Website Pages" value="News"><span><strong>News and Announcements</strong><small>Hospital updates and events</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Pages" value="News"><span><strong>News & Announcements</strong><small>Updates and events</small></span></label>
 <label class="choice"><input type="checkbox" name="Website Pages" value="Careers"><span><strong>Careers</strong><small>Job opportunities</small></span></label>
 <label class="choice"><input type="checkbox" name="Website Pages" value="Contact"><span><strong>Contact Us</strong><small>Phone, address and map</small></span></label>
 <label class="choice"><input type="checkbox" name="Website Pages" value="FAQs"><span><strong>Frequently Asked Questions</strong></span></label>
 <label class="choice"><input type="checkbox" name="Website Pages" value="Patient Information"><span><strong>Patient Information</strong><small>Guidelines and useful information</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Pages" value="Testimonials"><span><strong>Patient Testimonials</strong></span></label>
+<label class="choice"><input type="checkbox" name="Website Pages" value="Health Blog"><span><strong>Health Articles / Blog</strong><small>Medical awareness content</small></span></label>
 </div>
-<div class="sub">Additional Website Features</div>
-<div class="choices">
-<label class="choice"><input type="checkbox" name="Website Features" value="WhatsApp"><span><strong>WhatsApp Contact</strong><small>Patients contact the hospital</small></span></label>
-<label class="choice"><input type="checkbox" name="Website Features" value="Live Chat"><span><strong>Live Chat</strong><small>Chat with hospital representatives</small></span></label>
-<label class="choice"><input type="checkbox" name="Website Features" value="Emergency Contact"><span><strong>Emergency Contact</strong><small>Easy access to emergency numbers</small></span></label>
-<label class="choice"><input type="checkbox" name="Website Features" value="Search"><span><strong>Search</strong><small>Find doctors and services</small></span></label>
-<label class="choice"><input type="checkbox" name="Website Features" value="Social Media"><span><strong>Social Media Links</strong></span></label>
-<label class="choice"><input type="checkbox" name="Website Features" value="Online Forms"><span><strong>Online Inquiry Forms</strong></span></label>
-</div>
+<div class="sub">Content You Will Provide</div>
+<div class="field"><label class="title">Will you have the following ready for the website?</label><div class="choices">
+<label class="choice"><input type="checkbox" name="Content Ready" value="Hospital Logo"><span><strong>Hospital Logo</strong></span></label>
+<label class="choice"><input type="checkbox" name="Content Ready" value="Doctor Photos"><span><strong>Doctor Photos</strong></span></label>
+<label class="choice"><input type="checkbox" name="Content Ready" value="Hospital Photos"><span><strong>Hospital Photos</strong></span></label>
+<label class="choice"><input type="checkbox" name="Content Ready" value="Department Descriptions"><span><strong>Department Descriptions</strong></span></label>
+<label class="choice"><input type="checkbox" name="Content Ready" value="Service Descriptions"><span><strong>Service Descriptions</strong></span></label>
+<label class="choice"><input type="checkbox" name="Content Ready" value="Need writing help"><span><strong>We need help writing content</strong></span></label>
+</div></div>
 <div class="sub">Preferred Website Languages</div>
 <div class="choices">
 <label class="choice"><input type="checkbox" name="Languages" value="English"><span><strong>English</strong></span></label>
@@ -172,22 +177,53 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 
 <!-- 3 -->
 <section class="section">
-<div class="head"><div class="headicon"><i class="fa-solid fa-calendar-check"></i></div><div><h2>Services for Your Patients</h2><p>What would you like patients to do through your website?</p></div></div>
-<div class="hint">Imagine a patient visiting your website. Which services would make their experience easier?</div>
+<div class="head"><div class="headicon"><i class="fa-solid fa-sliders"></i></div><div><h2>Website Features</h2><p>What should your website be able to do?</p></div></div>
+<div class="hint">These are tools and functions that improve the visitor's experience on your website.</div>
+<div class="choices">
+<label class="choice"><input type="checkbox" name="Website Features" value="WhatsApp"><span><strong>WhatsApp Contact</strong><small>Quick direct chat button</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Live Chat"><span><strong>Live Chat</strong><small>Chat with hospital representatives</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Emergency Contact"><span><strong>Emergency Contact Button</strong><small>Easy access to emergency numbers</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Search"><span><strong>Search Bar</strong><small>Find doctors and services quickly</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Social Media"><span><strong>Social Media Links</strong><small>Facebook, Instagram, TikTok, etc.</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Online Forms"><span><strong>Contact / Inquiry Forms</strong><small>Patients send messages online</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Google Maps"><span><strong>Google Maps Location</strong><small>Directions to the hospital</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Newsletter"><span><strong>Newsletter Subscription</strong><small>Collect patient emails</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="SEO"><span><strong>Search Engine Optimization</strong><small>Be found on Google</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Google Analytics"><span><strong>Visitor Analytics</strong><small>See website traffic and activity</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Fast Loading"><span><strong>Fast Loading Speed</strong><small>Optimized for slow networks</small></span></label>
+<label class="choice"><input type="checkbox" name="Website Features" value="Mobile Responsive"><span><strong>Mobile Responsive Design</strong><small>Looks great on phones</small></span></label>
+</div>
+<div class="sub">Website Management</div>
+<div class="field"><label class="title">Would you like to be able to update the website yourself (add news, photos, doctors)?</label><div class="radios">
+<label><input type="radio" name="CMS" value="Yes"> Yes, give us an admin panel</label>
+<label><input type="radio" name="CMS" value="No"> No, we will ask you</label>
+<label><input type="radio" name="CMS" value="Maybe"> Maybe, need details</label>
+</div></div>
+<div class="field"><label class="title">Would you like training on how to use the website admin panel?</label><div class="radios">
+<label><input type="radio" name="Training" value="Yes"> Yes</label>
+<label><input type="radio" name="Training" value="No"> No</label>
+<label><input type="radio" name="Training" value="Maybe"> Maybe</label>
+</div></div>
+</section>
+
+<!-- 4 -->
+<section class="section">
+<div class="head"><div class="headicon"><i class="fa-solid fa-calendar-check"></i></div><div><h2>Patient Services on the Website</h2><p>What would you like patients to be able to do through your website?</p></div></div>
+<div class="hint">Imagine a patient visiting your website. Which of these website services would make their experience easier?</div>
 <div class="choices">
 <label class="choice"><input type="checkbox" name="Patient Services" value="Online Appointment Booking"><span><strong>Book Appointments Online</strong><small>Choose a doctor, date and time</small></span></label>
 <label class="choice"><input type="checkbox" name="Patient Services" value="Doctor Availability"><span><strong>View Doctor Availability</strong><small>See available doctors and schedules</small></span></label>
-<label class="choice"><input type="checkbox" name="Patient Services" value="Appointment Changes"><span><strong>Change or Cancel Appointments</strong></span></label>
-<label class="choice"><input type="checkbox" name="Patient Services" value="Appointment Reminders"><span><strong>Appointment Reminders</strong><small>Receive SMS or email reminders</small></span></label>
-<label class="choice"><input type="checkbox" name="Patient Services" value="Online Consultation"><span><strong>Online Consultation</strong><small>Consult a doctor remotely</small></span></label>
+<label class="choice"><input type="checkbox" name="Patient Services" value="Appointment Changes"><span><strong>Change or Cancel Appointments</strong><small>Online self-service</small></span></label>
+<label class="choice"><input type="checkbox" name="Patient Services" value="Appointment Reminders"><span><strong>Appointment Reminders</strong><small>SMS or email reminders</small></span></label>
+<label class="choice"><input type="checkbox" name="Patient Services" value="Online Consultation"><span><strong>Request Online Consultation</strong><small>Book a remote consultation</small></span></label>
 <label class="choice"><input type="checkbox" name="Patient Services" value="Laboratory Results"><span><strong>View Laboratory Results</strong><small>Securely access test results online</small></span></label>
 <label class="choice"><input type="checkbox" name="Patient Services" value="Patient Account"><span><strong>Personal Patient Account</strong><small>Login to view personal information</small></span></label>
 <label class="choice"><input type="checkbox" name="Patient Services" value="Online Payment"><span><strong>Online Payments</strong><small>Pay for selected services online</small></span></label>
-<label class="choice"><input type="checkbox" name="Patient Services" value="Feedback"><span><strong>Patient Feedback</strong><small>Share suggestions and complaints</small></span></label>
-<label class="choice"><input type="checkbox" name="Patient Services" value="Health Education"><span><strong>Health Education</strong><small>Articles and medical awareness</small></span></label>
+<label class="choice"><input type="checkbox" name="Patient Services" value="Feedback"><span><strong>Patient Feedback / Reviews</strong><small>Share suggestions and complaints</small></span></label>
+<label class="choice"><input type="checkbox" name="Patient Services" value="Health Education"><span><strong>Health Education Content</strong><small>Articles and medical awareness</small></span></label>
 </div>
 <div class="sub">Appointment Booking Preferences</div>
-<div class="field"><label class="title">Would you like patients to book appointments online?</label><div class="radios">
+<div class="field"><label class="title">Would you like patients to book appointments online through the website?</label><div class="radios">
 <label><input type="radio" name="Booking" value="Yes"> Yes</label>
 <label><input type="radio" name="Booking" value="No"> No</label>
 <label><input type="radio" name="Booking" value="Maybe later"> Maybe later</label>
@@ -200,55 +236,9 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 </div></div>
 </section>
 
-<!-- 4 -->
-<section class="section">
-<div class="head"><div class="headicon"><i class="fa-solid fa-laptop-medical"></i></div><div><h2>Hospital Management & Digital Systems</h2><p>Would you like to manage hospital activities using a computer system?</p></div></div>
-<div class="hint">No technical knowledge is needed. Simply choose the activities you would like to manage digitally.</div>
-<div class="field"><label class="title">Would you like a digital system to help manage your hospital?</label><div class="radios">
-<label><input type="radio" name="Need System" value="Yes" id="sysYes"> Yes</label>
-<label><input type="radio" name="Need System" value="Website only" id="sysNo"> No, website only</label>
-<label><input type="radio" name="Need System" value="Need advice" id="sysMaybe"> I need advice</label>
-</div></div>
-<div id="systemArea" class="conditional">
-<div class="sub">Patient and Medical Services</div>
-<div class="choices">
-<label class="choice"><input type="checkbox" name="Systems" value="Patient Registration"><span><strong>Patient Registration</strong><small>Register and manage patient information</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Electronic Patient Records"><span><strong>Patient Medical Records</strong><small>Keep patient histories and treatment records</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Doctor Management"><span><strong>Doctor Management</strong><small>Manage doctors and their schedules</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Laboratory Management"><span><strong>Laboratory Management</strong><small>Manage tests and laboratory results</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Pharmacy Management"><span><strong>Pharmacy Management</strong><small>Manage medicines and stock</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Patient Admission"><span><strong>Patient Admission</strong><small>Manage admitted patients and beds</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Radiology"><span><strong>Radiology Management</strong><small>Manage imaging and reports</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Electronic Prescriptions"><span><strong>Digital Prescriptions</strong><small>Doctors issue prescriptions electronically</small></span></label>
-</div>
-<div class="sub">Administration and Finance</div>
-<div class="choices">
-<label class="choice"><input type="checkbox" name="Systems" value="Billing"><span><strong>Billing and Payments</strong><small>Patient invoices and payments</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Insurance"><span><strong>Insurance Management</strong><small>Manage insurance patients and claims</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Inventory"><span><strong>Inventory Management</strong><small>Manage hospital supplies and stock</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Staff Management"><span><strong>Staff Management</strong><small>Manage employee information</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Payroll"><span><strong>Payroll</strong><small>Manage staff salaries</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Management Reports"><span><strong>Management Reports</strong><small>View hospital performance reports</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Queue Management"><span><strong>Patient Queue Management</strong><small>Manage patient waiting times</small></span></label>
-<label class="choice"><input type="checkbox" name="Systems" value="Feedback Management"><span><strong>Feedback Management</strong><small>Monitor patient satisfaction</small></span></label>
-</div>
-<div class="sub">Hospital Management Preferences</div>
-<div class="field"><label class="title">Would you like hospital management to view daily reports and activities?</label><div class="radios">
-<label><input type="radio" name="Reports" value="Yes"> Yes</label>
-<label><input type="radio" name="Reports" value="No"> No</label>
-<label><input type="radio" name="Reports" value="Maybe"> Maybe</label>
-</div></div>
-<div class="field"><label class="title">Would different employees need their own login accounts?</label><div class="radios">
-<label><input type="radio" name="Staff Login" value="Yes"> Yes</label>
-<label><input type="radio" name="Staff Login" value="No"> No</label>
-<label><input type="radio" name="Staff Login" value="Not sure"> Not sure</label>
-</div></div>
-</div>
-</section>
-
 <!-- 5 -->
 <section class="section">
-<div class="head"><div class="headicon"><i class="fa-solid fa-palette"></i></div><div><h2>Website Appearance & Preferences</h2><p>Tell us how you want your hospital to be presented online.</p></div></div>
+<div class="head"><div class="headicon"><i class="fa-solid fa-palette"></i></div><div><h2>Website Design & Appearance</h2><p>Tell us how you want your hospital to look online.</p></div></div>
 <div class="field"><label class="title">Which design style do you prefer?</label><div class="choices">
 <label class="choice"><input type="radio" name="Style" value="Modern and Premium"><span><strong>Modern & Premium</strong><small>Elegant and sophisticated</small></span></label>
 <label class="choice"><input type="radio" name="Style" value="Professional and Corporate"><span><strong>Professional & Corporate</strong><small>Clean and institutional</small></span></label>
@@ -261,46 +251,43 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <label class="choice"><input type="radio" name="Colors" value="Navy and Gold"><span><strong>Navy & Gold</strong></span></label>
 <label class="choice"><input type="radio" name="Colors" value="Existing Hospital Colors"><span><strong>Our Existing Brand Colors</strong></span></label>
 </div></div>
-<div class="field"><label class="title">Do you have a hospital logo?</label><div class="radios">
+<div class="field"><label class="title">Do you have a hospital logo we should use?</label><div class="radios">
 <label><input type="radio" name="Logo" value="Yes"> Yes</label>
 <label><input type="radio" name="Logo" value="No"> No</label>
 <label><input type="radio" name="Logo" value="Needs updating"> Needs updating</label>
 </div></div>
-<div class="field"><label class="title">Would you like a mobile application in addition to the website?</label><div class="radios">
-<label><input type="radio" name="Mobile App" value="Yes"> Yes</label>
-<label><input type="radio" name="Mobile App" value="No"> No</label>
-<label><input type="radio" name="Mobile App" value="Maybe later"> Maybe later</label>
-</div></div>
 <div class="field"><label class="title">Is there a hospital website you like? Please share its address if available.</label><input name="Reference Website" type="text" placeholder="Website link or name"></div>
+<div class="field"><label class="title">Please describe the image you want the website to give visitors.</label><textarea name="Brand Impression" placeholder="e.g. trusted, modern, caring, warm, high-quality care..."></textarea></div>
 </section>
 
 <!-- 6 -->
 <section class="section">
 <div class="head"><div class="headicon"><i class="fa-solid fa-clipboard-check"></i></div><div><h2>Final Expectations</h2><p>Help us understand what matters most to you.</p></div></div>
-<div class="field"><label class="title">What is your most important priority?</label><div class="radios">
-<label><input type="radio" name="Priority" value="Website"> Website</label>
-<label><input type="radio" name="Priority" value="Booking System"> Booking system</label>
-<label><input type="radio" name="Priority" value="Hospital System"> Hospital management system</label>
+<div class="field"><label class="title">What is your most important website priority?</label><div class="radios">
+<label><input type="radio" name="Priority" value="Professional Design"> Professional design</label>
+<label><input type="radio" name="Priority" value="Attracting Patients"> Attracting new patients</label>
+<label><input type="radio" name="Priority" value="Online Booking"> Online appointment booking</label>
+<label><input type="radio" name="Priority" value="Doctor Information"> Clear doctor & services info</label>
 <label><input type="radio" name="Priority" value="All"> All of them</label>
 </div></div>
-<div class="field"><label class="title">When would you like the project to begin?</label><div class="radios">
+<div class="field"><label class="title">When would you like the website project to begin?</label><div class="radios">
 <label><input type="radio" name="Timeline" value="Immediately"> As soon as possible</label>
 <label><input type="radio" name="Timeline" value="Within 1-3 months"> Within 1–3 months</label>
 <label><input type="radio" name="Timeline" value="Within 6 months"> Within 6 months</label>
 <label><input type="radio" name="Timeline" value="Not decided"> Not decided</label>
 </div></div>
-<div class="field"><label class="title">Would you like us to provide ongoing support and updates?</label><div class="radios">
+<div class="field"><label class="title">Would you like us to provide ongoing website support and updates?</label><div class="radios">
 <label><input type="radio" name="Support" value="Yes"> Yes</label>
 <label><input type="radio" name="Support" value="No"> No</label>
 <label><input type="radio" name="Support" value="Need details"> Need details</label>
 </div></div>
-<div class="field"><label class="title">What are the three things you would most like this project to achieve?</label><textarea name="Top Expectations" placeholder="1.&#10;2.&#10;3."></textarea></div>
-<div class="field"><label class="title">Any other ideas, requirements or services you would like us to consider?</label><textarea name="Additional Comments" placeholder="Tell us anything else you would like us to know..."></textarea></div>
-<div class="field"><label class="title">Would you like us to prepare a proposal based on your answers?</label><div class="radios">
+<div class="field"><label class="title">What are the three things you would most like this website to achieve?</label><textarea name="Top Expectations" placeholder="1.&#10;2.&#10;3."></textarea></div>
+<div class="field"><label class="title">Any other ideas or requirements for the website?</label><textarea name="Additional Comments" placeholder="Tell us anything else you would like us to know..."></textarea></div>
+<div class="field"><label class="title">Would you like us to prepare a website proposal based on your answers?</label><div class="radios">
 <label><input type="radio" name="Proposal" value="Yes"> Yes</label>
 <label><input type="radio" name="Proposal" value="After discussion"> After discussion</label>
 </div></div>
-<div class="hint"><i class="fa-solid fa-shield-halved"></i> This questionnaire is for project planning only. Please do not enter patient names, medical histories or confidential patient information.</div>
+<div class="hint"><i class="fa-solid fa-shield-halved"></i> This questionnaire is for website planning only. Please do not enter patient names, medical histories or confidential patient information.</div>
 </section>
 
 <div class="buttons">
@@ -314,13 +301,13 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 <div class="result">
 <i class="fa-solid fa-circle-check"></i>
 <h2 style="color:var(--navy);margin-top:15px">Thank you for filling!</h2>
-<p style="color:var(--muted)" id="recipientNote">Your PDF report is ready for tewodroswondu123@gmail.com.</p>
+<p style="color:var(--muted)" id="recipientNote">Preparing to send your answers…</p>
 </div>
+<div class="sendstatus" id="sendStatus"></div>
 <div class="summary" id="summary"></div>
-<div class="buttons" style="justify-content:center;flex-wrap:wrap">
-<button type="button" class="btn primary" id="btnPdf"><i class="fa-solid fa-file-pdf"></i> Download PDF Report</button>
+<div class="buttons" style="justify-content:center">
 <button type="button" class="btn secondary" id="btnCopy"><i class="fa-regular fa-copy"></i> Copy Summary</button>
-<a class="btn success" id="btnGmail" target="_blank" rel="noopener"><i class="fa-brands fa-google"></i> Open in Gmail</a>
+<a class="btn success" id="btnGmail" target="_blank" rel="noopener"><i class="fa-brands fa-google"></i> Send from my Gmail</a>
 </div>
 <p id="message" style="text-align:center;font-size:12px;color:var(--green);margin-top:12px"></p>
 </section>
@@ -328,25 +315,42 @@ footer p{font-size:12px;color:#b8d0df;margin-top:7px}
 
 <footer>
 <strong><i class="fa-solid fa-heart-pulse" style="color:#50dce8"></i> Healthcare Digital Solutions</strong>
-<p>Technology that makes healthcare more accessible, efficient and patient-focused.</p>
+<p>Beautiful hospital websites that make healthcare more accessible online.</p>
 </footer>
 
 <script>
+/* ================================================================
+   ⚙️  AUTOMATIC EMAIL DELIVERY — ONE-TIME SETUP (1 minute)
+   ----------------------------------------------------------------
+   1. Open  https://web3forms.com
+   2. Type  tewodroswondu123@gmail.com  and click "Create Access Key"
+   3. Check your Gmail — you receive an Access Key instantly
+   4. Paste that key between the quotes below
+   ----------------------------------------------------------------
+   After that, EVERY completed questionnaire is emailed to you
+   automatically as plain text the moment the visitor clicks Complete.
+   No PDF. No attachments. Just the answers.
+   ================================================================ */
+const EMAIL_CONFIG = {
+  web3formsKey: 'PASTE-YOUR-WEB3FORMS-ACCESS-KEY-HERE',
+  formspreeEndpoint: '',
+  subjectPrefix: 'Hospital Website Requirements'
+};
+
 const TARGET_EMAIL = 'tewodroswondu123@gmail.com';
 const sections = [...document.querySelectorAll('#form .section')];
 const GROUPS = {
   'ABOUT THE HOSPITAL': ['Hospital Name','Hospital Type','Location','Contact Person','Position','Email','Phone','Existing Website','Main Services','Objectives'],
-  'WEBSITE REQUIREMENTS': ['Website Pages','Website Features','Languages'],
+  'WEBSITE PAGES & CONTENT': ['Website Pages','Content Ready','Languages'],
+  'WEBSITE FEATURES': ['Website Features','CMS','Training'],
   'PATIENT SERVICES': ['Patient Services','Booking','Booking Management'],
-  'HOSPITAL SYSTEMS': ['Need System','Systems','Reports','Staff Login'],
-  'DESIGN PREFERENCES': ['Style','Colors','Logo','Mobile App','Reference Website'],
-  'PROJECT EXPECTATIONS': ['Priority','Timeline','Support','Top Expectations','Additional Comments','Proposal']
+  'DESIGN & APPEARANCE': ['Style','Colors','Logo','Reference Website','Brand Impression'],
+  'FINAL EXPECTATIONS': ['Priority','Timeline','Support','Top Expectations','Additional Comments','Proposal']
 };
 
 let step = 0;
 let summaryText = '';
-let lastPdfBlob = null;
-let lastPdfName = 'Hospital-Requirements.pdf';
+let sending = false;
 
 function render() {
   sections.forEach((s, i) => s.classList.toggle('active', i === step));
@@ -362,25 +366,12 @@ function render() {
 function move(dir) {
   if (dir > 0) {
     for (const el of sections[step].querySelectorAll('[required]')) {
-      if (!el.checkValidity()) {
-        el.reportValidity();
-        return;
-      }
+      if (!el.checkValidity()) { el.reportValidity(); return; }
     }
   }
   step = Math.max(0, Math.min(sections.length - 1, step + dir));
   render();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function toggleSystemArea() {
-  const show = document.getElementById('sysYes').checked;
-  const area = document.getElementById('systemArea');
-  area.classList.toggle('show', show);
-  area.querySelectorAll('input').forEach(inp => {
-    inp.disabled = !show;
-    if (!show) inp.checked = false;
-  });
 }
 
 function collect() {
@@ -398,103 +389,92 @@ function escapeHtml(s) {
   }[c]));
 }
 
-function buildPdfBlob(data, txt) {
-  try {
-    const jspdfLib = window.jspdf && window.jspdf.jsPDF;
-    if (!jspdfLib) throw new Error('jsPDF not loaded');
-    const doc = new jspdfLib({ unit: 'pt', format: 'a4' });
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 45;
-    const maxWidth = pageWidth - margin * 2;
+/* ============================================================
+   AUTOMATIC EMAIL SENDER — text only, no attachments
+   ============================================================ */
+async function sendReportByEmail(data, txt) {
+  const hospital = data['Hospital Name'] || 'Hospital';
+  const subject = `${EMAIL_CONFIG.subjectPrefix} — ${hospital}`;
+  const replyTo = data['Email'] || TARGET_EMAIL;
 
-    doc.setFillColor(9, 33, 58);
-    doc.rect(0, 0, pageWidth, 85, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(17);
-    doc.text('Hospital Website & Digital Services Assessment', margin, 38);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(192, 217, 233);
-    doc.text(`Thank you for filling! Generated: ${new Date().toLocaleString()}`, margin, 60);
-
-    let y = 112;
-    for (const [heading, keys] of Object.entries(GROUPS)) {
-      const entries = keys.filter(k => data[k]);
-      if (!entries.length) continue;
-
-      if (y > pageHeight - 80) { doc.addPage(); y = 55; }
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.setTextColor(8, 127, 193);
-      doc.text(heading, margin, y);
-      y += 8;
-      doc.setDrawColor(225, 234, 241);
-      doc.line(margin, y, pageWidth - margin, y);
-      y += 16;
-
-      for (const k of entries) {
-        const wrapped = doc.splitTextToSize(`${k}: ${data[k]}`, maxWidth);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.setTextColor(36, 59, 80);
-        for (const wLine of wrapped) {
-          if (y > pageHeight - 45) { doc.addPage(); y = 55; }
-          doc.text(wLine, margin, y);
-          y += 15;
-        }
-        y += 4;
-      }
-      y += 10;
-    }
-    return { blob: doc.output('blob'), ext: 'pdf' };
-  } catch (e) {
-    // Fallback if offline/CDN blocked: create a downloadable report file so it never crashes
-    return {
-      blob: new Blob([txt], { type: 'text/plain;charset=utf-8' }),
-      ext: 'txt'
+  if (EMAIL_CONFIG.web3formsKey && !/PASTE-YOUR-WEB3FORMS/i.test(EMAIL_CONFIG.web3formsKey)) {
+    const payload = {
+      access_key: EMAIL_CONFIG.web3formsKey,
+      subject: subject,
+      from_name: data['Contact Person'] || hospital,
+      email: replyTo,
+      replyto: replyTo,
+      message: txt,
+      botcheck: ''
     };
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok || !out.success) {
+      throw new Error(out.message || ('HTTP ' + res.status));
+    }
+    return 'Web3Forms';
   }
+
+  if (EMAIL_CONFIG.formspreeEndpoint) {
+    const res = await fetch(EMAIL_CONFIG.formspreeEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        _subject: subject,
+        _replyto: replyTo,
+        name: data['Contact Person'] || hospital,
+        email: replyTo,
+        message: txt
+      })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return 'Formspree';
+  }
+
+  throw new Error('No email service configured. Please add a Web3Forms key.');
 }
 
-function triggerBlobDownload(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1500);
+function setSendStatus(type, html) {
+  const el = document.getElementById('sendStatus');
+  el.className = 'sendstatus show ' + type;
+  el.innerHTML = html;
 }
 
 function buildGmailUrl(data) {
   const hospital = data['Hospital Name'] || 'New Assessment';
   const name = data['Contact Person'] || 'there';
-  const subject = encodeURIComponent(`Hospital Digital Requirements Report - ${hospital}`);
+  const subject = encodeURIComponent(`Hospital Website Requirements - ${hospital}`);
   const body = encodeURIComponent(
-    `Hello ${name},\n\nThank you for filling out the Hospital Website & Digital Services Assessment for ${hospital}. Please find the downloaded PDF report (${lastPdfName}) attached or review the summary below:\n\n${summaryText}Thank you for filling!\nHealthcare Digital Solutions`
+    `Hello ${name},\n\nThank you for filling out the Hospital Website Assessment for ${hospital}.\n\n` +
+    `${summaryText}\n\nThank you for filling!\nHealthcare Digital Solutions`
   );
   return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(TARGET_EMAIL)}&su=${subject}&body=${body}`;
 }
 
-function finish() {
+async function finish() {
+  if (sending) return;
+
   for (const el of document.querySelectorAll('#form [required]')) {
     if (!el.checkValidity()) {
       const secIndex = sections.findIndex(s => s.contains(el));
-      if (secIndex >= 0) {
-        step = secIndex;
-        render();
-      }
+      if (secIndex >= 0) { step = secIndex; render(); }
       setTimeout(() => el.reportValidity(), 50);
       return;
     }
   }
 
+  sending = true;
+  const finishBtn = document.getElementById('finish');
+  finishBtn.disabled = true;
+  finishBtn.textContent = 'Sending…';
+
   const d = collect();
   let html = '';
-  let txt = 'HOSPITAL DIGITAL REQUIREMENTS\n\n';
+  let txt = 'HOSPITAL WEBSITE REQUIREMENTS\n\n';
 
   for (const [heading, keys] of Object.entries(GROUPS)) {
     let rows = '';
@@ -508,50 +488,53 @@ function finish() {
   }
 
   summaryText = txt;
-  const safeHospital = (d['Hospital Name'] || 'Hospital').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'Hospital';
-  const generated = buildPdfBlob(d, txt);
-  lastPdfBlob = generated.blob;
-  lastPdfName = `${safeHospital}-Digital-Requirements.${generated.ext}`;
 
-  const gmailUrl = buildGmailUrl(d);
-  const gmailBtn = document.getElementById('btnGmail');
-  gmailBtn.href = gmailUrl;
-
+  document.getElementById('btnGmail').href = buildGmailUrl(d);
   document.getElementById('summary').innerHTML = html || 'No answers recorded.';
-  document.getElementById('recipientNote').textContent = `Your PDF report (${lastPdfName}) is ready to send to ${TARGET_EMAIL}.`;
+  document.getElementById('recipientNote').textContent =
+    `Sending your website questionnaire to ${TARGET_EMAIL}…`;
+
   document.getElementById('form').classList.add('hidden');
   document.getElementById('result').classList.add('active');
   document.querySelector('.progress').classList.add('hidden');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  triggerBlobDownload(lastPdfBlob, lastPdfName);
-  const win = window.open(gmailUrl, '_blank', 'noopener');
-  document.getElementById('message').textContent = win
-    ? `Thank you for filling! Opened Gmail to ${TARGET_EMAIL} and downloaded ${lastPdfName} to attach.`
-    : `Thank you for filling! Downloaded ${lastPdfName}. Click "Open in Gmail" above to send to ${TARGET_EMAIL} and attach the PDF.`;
+  setSendStatus('pending', '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending your answers to ' + TARGET_EMAIL + ' …');
+
+  try {
+    const via = await sendReportByEmail(d, txt);
+    setSendStatus('ok',
+      `<i class="fa-solid fa-circle-check"></i> Sent successfully! Your answers were emailed to <b>${TARGET_EMAIL}</b> (via ${via}).`);
+    document.getElementById('recipientNote').textContent =
+      `A copy of your answers has been delivered to ${TARGET_EMAIL}.`;
+    document.getElementById('message').textContent = '';
+  } catch (err) {
+    console.warn('Auto-send failed:', err);
+    setSendStatus('err',
+      `<i class="fa-solid fa-triangle-exclamation"></i> Automatic sending could not complete (${escapeHtml(err.message)}).
+       Please use <b>Copy Summary</b> then <b>Send from my Gmail</b> below.`);
+    document.getElementById('recipientNote').textContent =
+      'Almost done — please use the buttons below to deliver your answers.';
+  } finally {
+    sending = false;
+    finishBtn.disabled = false;
+    finishBtn.textContent = 'Complete Questionnaire ✓';
+  }
 }
 
 document.getElementById('prev').addEventListener('click', () => move(-1));
 document.getElementById('next').addEventListener('click', () => move(1));
 document.getElementById('finish').addEventListener('click', finish);
-document.querySelectorAll('[name="Need System"]').forEach(el => el.addEventListener('change', toggleSystemArea));
-
-document.getElementById('btnPdf').addEventListener('click', () => {
-  if (!lastPdfBlob) return;
-  triggerBlobDownload(lastPdfBlob, lastPdfName);
-  document.getElementById('message').textContent = `Downloaded ${lastPdfName}.`;
-});
 
 document.getElementById('btnCopy').addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(summaryText);
     document.getElementById('message').textContent = 'Summary copied to clipboard!';
   } catch (e) {
-    document.getElementById('message').textContent = 'Could not copy automatically; use Download PDF Report.';
+    document.getElementById('message').textContent = 'Could not copy automatically. Please select and copy the summary above.';
   }
 });
 
-toggleSystemArea();
 render();
 </script>
 </body>
